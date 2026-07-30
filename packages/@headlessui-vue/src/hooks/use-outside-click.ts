@@ -23,7 +23,7 @@ export function useOutsideClick(
     event: MouseEvent | PointerEvent | FocusEvent | TouchEvent,
     target: HTMLOrSVGElement & Element
   ) => void,
-  enabled: ComputedRef<boolean> = computed(() => true)
+  enabled: ComputedRef<boolean> = computed(() => { throw new Error("STUB"); })
 ) {
   function handleOutsideClick<E extends MouseEvent | PointerEvent | FocusEvent | TouchEvent>(
     event: E,
@@ -44,19 +44,7 @@ export function useOutsideClick(
     if (!target.getRootNode().contains(target)) return
 
     let _containers = (function resolve(containers): ContainerCollection {
-      if (typeof containers === 'function') {
-        return resolve(containers())
-      }
-
-      if (Array.isArray(containers)) {
-        return containers
-      }
-
-      if (containers instanceof Set) {
-        return containers
-      }
-
-      return [containers]
+        throw new Error("STUB");
     })(containers)
 
     // Ignore if the target exists in one of the containers
@@ -99,7 +87,7 @@ export function useOutsideClick(
     enabled,
     'pointerdown',
     (event) => {
-      initialClickTarget.value = event.composedPath?.()?.[0] || event.target
+        throw new Error("STUB");
     },
     true
   )
@@ -108,7 +96,7 @@ export function useOutsideClick(
     enabled,
     'mousedown',
     (event) => {
-      initialClickTarget.value = event.composedPath?.()?.[0] || event.target
+        throw new Error("STUB");
     },
     true
   )
@@ -117,19 +105,7 @@ export function useOutsideClick(
     enabled,
     'click',
     (event) => {
-      if (isMobile()) {
-        return
-      }
-
-      if (!initialClickTarget.value) {
-        return
-      }
-
-      handleOutsideClick(event, () => {
-        return initialClickTarget.value as HTMLElement
-      })
-
-      initialClickTarget.value = null
+        throw new Error("STUB");
     },
 
     // We will use the `capture` phase so that layers in between with `event.stopPropagation()`
@@ -144,8 +120,7 @@ export function useOutsideClick(
     enabled,
     'touchstart',
     (event) => {
-      startPosition.x = event.touches[0].clientX
-      startPosition.y = event.touches[0].clientY
+        throw new Error("STUB");
     },
     true
   )
@@ -154,22 +129,7 @@ export function useOutsideClick(
     enabled,
     'touchend',
     (event) => {
-      // If the user moves their finger by ${MOVE_THRESHOLD_PX} pixels or more,
-      // we'll assume that they are scrolling and not clicking.
-      let endPosition = { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY }
-      if (
-        Math.abs(endPosition.x - startPosition.x) >= MOVE_THRESHOLD_PX ||
-        Math.abs(endPosition.y - startPosition.y) >= MOVE_THRESHOLD_PX
-      ) {
-        return
-      }
-
-      return handleOutsideClick(event, () => {
-        if (isHTMLorSVGElement(event.target)) {
-          return event.target
-        }
-        return null
-      })
+        throw new Error("STUB");
     },
 
     // We will use the `capture` phase so that layers in between with `event.stopPropagation()`
@@ -190,11 +150,7 @@ export function useOutsideClick(
     enabled,
     'blur',
     (event) => {
-      return handleOutsideClick(event, () => {
-        return isHTMLIframeElement(window.document.activeElement)
-          ? window.document.activeElement
-          : null
-      })
+        throw new Error("STUB");
     },
     true
   )

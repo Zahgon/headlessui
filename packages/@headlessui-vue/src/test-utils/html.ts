@@ -1,7 +1,7 @@
 export function jsx(templates: TemplateStringsArray) {
-  return templates.join('')
+    throw new Error("STUB");
 }
 
 export function html(templates: TemplateStringsArray) {
-  return templates.join('')
+    throw new Error("STUB");
 }

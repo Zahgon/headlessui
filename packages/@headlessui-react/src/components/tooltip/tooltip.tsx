@@ -73,7 +73,7 @@ class TooltipStore {
   subscribe = (listener: (state: ActiveTooltipId) => void) => {
     this._listeners.push(listener)
     return () => {
-      this._listeners = this._listeners.filter((x) => x !== listener)
+        throw new Error("STUB");
     }
   }
 
@@ -82,13 +82,11 @@ class TooltipStore {
   }
 
   getServerSnapshot = () => {
-    return this._state
+      throw new Error("STUB");
   }
 
   setTooltipId = (state: ActiveTooltipId) => {
-    if (this._state === state) return
-    this._state = state
-    this._listeners.forEach((listener) => listener(state))
+      throw new Error("STUB");
   }
 }
 
@@ -115,38 +113,10 @@ let reducers: {
   ) => StateDefinition
 } = {
   [ActionTypes.ShowTooltip](state, action) {
-    return {
-      ...state,
-      tooltipState: match(state.tooltipState, {
-        [TooltipState.Hidden]: match(action.when, {
-          [When.Immediate]: TooltipState.Visible,
-          [When.Delayed]: TooltipState.Initiated,
-        }),
-        [TooltipState.Initiated]: match(action.when, {
-          [When.Immediate]: TooltipState.Visible,
-          [When.Delayed]: TooltipState.Initiated,
-        }),
-        [TooltipState.Visible]: TooltipState.Visible,
-        [TooltipState.Hiding]: TooltipState.Visible,
-      }),
-    }
-  },
+        throw new Error("STUB");
+    },
   [ActionTypes.HideTooltip](state, action) {
-    return {
-      ...state,
-      tooltipState: match(state.tooltipState, {
-        [TooltipState.Hidden]: TooltipState.Hidden,
-        [TooltipState.Initiated]: TooltipState.Hidden,
-        [TooltipState.Visible]: match(action.when, {
-          [When.Immediate]: TooltipState.Hidden,
-          [When.Delayed]: TooltipState.Hiding,
-        }),
-        [TooltipState.Hiding]: match(action.when, {
-          [When.Immediate]: TooltipState.Hidden,
-          [When.Delayed]: TooltipState.Hiding,
-        }),
-      }),
-    }
+      throw new Error("STUB");
   },
 }
 
@@ -157,13 +127,7 @@ let TooltipActionsContext = createContext<{
 TooltipActionsContext.displayName = 'TooltipActionsContext'
 
 function useActions(component: string) {
-  let context = useContext(TooltipActionsContext)
-  if (context === null) {
-    let err = new Error(`<${component} /> is missing a parent <Tooltip /> component.`)
-    if (Error.captureStackTrace) Error.captureStackTrace(err, useActions)
-    throw err
-  }
-  return context
+    throw new Error("STUB");
 }
 type _Actions = ReturnType<typeof useActions>
 
@@ -171,18 +135,12 @@ let TooltipDataContext = createContext<({ visible: boolean } & StateDefinition) 
 TooltipDataContext.displayName = 'TooltipDataContext'
 
 function useData(component: string) {
-  let context = useContext(TooltipDataContext)
-  if (context === null) {
-    let err = new Error(`<${component} /> is missing a parent <Tooltip /> component.`)
-    if (Error.captureStackTrace) Error.captureStackTrace(err, useData)
-    throw err
-  }
-  return context
+    throw new Error("STUB");
 }
 type _Data = ReturnType<typeof useData>
 
 function stateReducer(state: StateDefinition, action: Actions) {
-  return match(action.type, reducers, state, action)
+    throw new Error("STUB");
 }
 
 // ---
@@ -206,110 +164,7 @@ function TooltipFn<TTag extends ElementType = typeof DEFAULT_TOOLTIP_TAG>(
   props: TooltipProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let {
-    id = `headlessui-tooltip-${useId()}`,
-    showDelayMs = 750,
-    hideDelayMs = 300,
-    ...theirProps
-  } = props
-
-  let activeTooltipId = useSyncExternalStore(
-    tooltipStore.subscribe,
-    tooltipStore.getSnapshot,
-    tooltipStore.getServerSnapshot
-  )
-  let [state, dispatch] = useReducer(stateReducer, {
-    id,
-    tooltipState: TooltipState.Hidden,
-  })
-
-  let [describedBy, DescriptionProvider] = useDescriptions()
-
-  let d = useDisposables()
-  useEffect(() => {
-    d.dispose()
-
-    match(state.tooltipState, {
-      [TooltipState.Hidden]() {
-        //
-      },
-      [TooltipState.Initiated]() {
-        d.setTimeout(() => showTooltip(When.Immediate), showDelayMs)
-      },
-      [TooltipState.Visible]() {
-        //
-      },
-      [TooltipState.Hiding]() {
-        d.setTimeout(() => hideTooltip(When.Immediate), hideDelayMs)
-      },
-    })
-  }, [d, state.tooltipState, showDelayMs, hideDelayMs])
-
-  let showTooltip = useEvent((when: When) => {
-    // In this case, showing the tooltip should be delayed, however if another tooltip is already
-    // active then we can make the tooltip show up immediately such that the end use doesn't have to
-    // wait again.
-    if (when === When.Delayed && activeTooltipId !== null && activeTooltipId !== id) {
-      when = When.Immediate
-    }
-
-    // This tooltip should be immediately visible, therefore it should be the active tooltip.
-    if (when === When.Immediate) {
-      tooltipStore.setTooltipId(id)
-    }
-
-    dispatch({ type: ActionTypes.ShowTooltip, when })
-  })
-  let hideTooltip = useEvent((when: When) => {
-    // We are the current active tooltip and we need to be hidden immediately, therefore there
-    // should not be any active tooltip anymore.
-    if (activeTooltipId === id && when === When.Immediate) {
-      tooltipStore.setTooltipId(null)
-    }
-
-    dispatch({ type: ActionTypes.HideTooltip, when })
-  })
-  let tooltipRef = useSyncRefs(ref)
-
-  let ourProps = { ref: tooltipRef }
-
-  let slot = useSlot<TooltipRenderPropArg>({})
-
-  let data = useMemo<_Data>(
-    () => ({
-      visible:
-        activeTooltipId === state.id &&
-        match(state.tooltipState, {
-          [TooltipState.Hidden]: false,
-          [TooltipState.Initiated]: false,
-          [TooltipState.Visible]: true,
-          [TooltipState.Hiding]: true,
-        }),
-      ...state,
-    }),
-    [activeTooltipId, state]
-  )
-  let actions = useMemo<_Actions>(() => ({ showTooltip, hideTooltip }), [showTooltip, hideTooltip])
-
-  let render = useRender()
-
-  return (
-    <DescriptionProvider value={describedBy}>
-      <FloatingProvider>
-        <TooltipActionsContext.Provider value={actions}>
-          <TooltipDataContext.Provider value={data}>
-            {render({
-              ourProps,
-              theirProps,
-              slot,
-              defaultTag: DEFAULT_TOOLTIP_TAG,
-              name: 'Tooltip',
-            })}
-          </TooltipDataContext.Provider>
-        </TooltipActionsContext.Provider>
-      </FloatingProvider>
-    </DescriptionProvider>
-  )
+    throw new Error("STUB");
 }
 
 // ---
@@ -330,80 +185,7 @@ function TriggerFn<TTag extends ElementType = typeof DEFAULT_TRIGGER_TAG>(
   props: TooltipTriggerProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let { disabled = false, autoFocus = false, ...theirProps } = props
-  let data = useData('TooltipTrigger')
-  let actions = useActions('TooltipTrigger')
-  let describedBy = useDescribedBy()
-  let internalButtonRef = useRef<HTMLElement | null>(null)
-  let triggerRef = useSyncRefs(internalButtonRef, ref, useFloatingReference())
-
-  let { isFocusVisible: focus, focusProps } = useFocusRing({ autoFocus })
-  let { isHovered: hover, hoverProps } = useHover({ isDisabled: disabled })
-
-  let handleKeyDown = useEvent((event: ReactKeyboardEvent<HTMLButtonElement>) => {
-    switch (event.key) {
-      case Keys.Enter:
-      case Keys.Escape:
-      case Keys.Space:
-        if (data.tooltipState === TooltipState.Visible) {
-          return actions.hideTooltip(When.Immediate)
-        }
-        break
-    }
-  })
-
-  let handleFocus = useEvent(() => {
-    actions.showTooltip(When.Immediate)
-  })
-
-  let handleBlur = useEvent(() => {
-    actions.hideTooltip(When.Immediate)
-  })
-
-  let handleMouseDown = useEvent(() => {
-    actions.hideTooltip(When.Immediate)
-  })
-
-  let handleMouseEnter = useEvent(() => {
-    actions.showTooltip(When.Delayed)
-  })
-
-  let handleMouseLeave = useEvent(() => {
-    actions.hideTooltip(When.Delayed)
-  })
-
-  let handleMouseMove = useEvent(() => {
-    if (data.tooltipState === TooltipState.Hiding) {
-      actions.showTooltip(When.Immediate)
-    }
-  })
-
-  let slot = useSlot<TriggerRenderPropArg>({ hover, focus, autofocus: autoFocus })
-  let ourProps = mergeProps(
-    {
-      ref: triggerRef,
-      'aria-describedby': data.visible ? describedBy : undefined,
-      onKeyDown: handleKeyDown,
-      onFocus: handleFocus,
-      onBlur: handleBlur,
-      onMouseDown: handleMouseDown,
-      onMouseEnter: handleMouseEnter,
-      onMouseLeave: handleMouseLeave,
-      onMouseMove: handleMouseMove,
-    },
-    focusProps,
-    hoverProps
-  )
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot,
-    defaultTag: DEFAULT_TRIGGER_TAG,
-    name: 'TooltipTrigger',
-  })
+    throw new Error("STUB");
 }
 
 // ---
@@ -425,51 +207,7 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
   props: TooltipPanelProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let { anchor: rawAnchor, ...theirProps } = props
-  let data = useData('TooltipPanel')
-
-  let usesOpenClosedState = useOpenClosed()
-  let visible = (() => {
-    if (usesOpenClosedState !== null) {
-      return (usesOpenClosedState & State.Open) === State.Open
-    }
-
-    return data.visible
-  })()
-
-  let internalPanelRef = useRef<HTMLElement | null>(null)
-  let anchor = useResolvedAnchor(rawAnchor ?? { to: 'top', padding: 8, gap: 8, offset: -4 })
-  let [floatingRef, style] = useFloatingPanel(visible ? anchor : undefined)
-  let panelRef = useSyncRefs(internalPanelRef, ref, floatingRef)
-
-  let ourProps = {
-    ref: panelRef,
-    role: 'tooltip',
-    ...(style ? { style } : {}),
-  }
-
-  let slot = useSlot<PanelRenderPropArg>({})
-
-  let render = useRender()
-
-  return render({
-    ourProps: {
-      ...ourProps,
-      as: Fragment,
-      children: (
-        <Portal>
-          {/** @ts-ignore TODO: Figure out why `panelRef` is not working from a TypeScript perspective. */}
-          <Description ref={panelRef} {...theirProps} />
-        </Portal>
-      ),
-    },
-    theirProps: {},
-    slot,
-    defaultTag: Fragment,
-    features: PanelRenderFeatures,
-    visible,
-    name: 'TooltipPanel',
-  })
+    throw new Error("STUB");
 }
 
 // ---

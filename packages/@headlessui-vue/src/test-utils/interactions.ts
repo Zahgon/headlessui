@@ -3,9 +3,7 @@ import { pointer } from './fake-pointer'
 
 function nextFrame(cb: Function): void {
   setImmediate(() =>
-    setImmediate(() => {
-      cb()
-    })
+    { throw new Error("STUB"); }
   )
 }
 
@@ -34,17 +32,7 @@ export function shift(event: Partial<KeyboardEvent>) {
 }
 
 export function word(input: string): Partial<KeyboardEvent>[] {
-  let result = input.split('').map((key) => ({ key }))
-
-  let element = document.activeElement
-
-  if (element instanceof HTMLInputElement) {
-    fireEvent.change(element, {
-      target: Object.assign({}, element, { value: input }),
-    })
-  }
-
-  return result
+    throw new Error("STUB");
 }
 
 let Default = Symbol()
@@ -82,139 +70,84 @@ let order: Record<
 > = {
   [Default]: [
     function keydown(element, event) {
-      return fireEvent.keyDown(element, event)
-    },
+          throw new Error("STUB");
+      },
     function keypress(element, event) {
-      return fireEvent.keyPress(element, event)
+        throw new Error("STUB");
     },
     function input(element, event) {
-      // TODO: This should only fire when the element's value changes
-      return fireEvent.input(element, event)
+        throw new Error("STUB");
     },
     function keyup(element, event) {
-      return fireEvent.keyUp(element, event)
+        throw new Error("STUB");
     },
   ],
   [Keys.Enter.key!]: [
     function keydown(element, event) {
-      return fireEvent.keyDown(element, event)
-    },
+          throw new Error("STUB");
+      },
     function keypress(element, event) {
-      return fireEvent.keyPress(element, event)
+        throw new Error("STUB");
     },
     function click(element, event) {
-      if (element instanceof HTMLButtonElement) return fireEvent.click(element, event)
-      return Ignore
+        throw new Error("STUB");
     },
     function keyup(element, event) {
-      return fireEvent.keyUp(element, event)
+        throw new Error("STUB");
     },
   ],
   [Keys.Space.key!]: [
     function keydown(element, event) {
-      return fireEvent.keyDown(element, event)
-    },
+          throw new Error("STUB");
+      },
     function keypress(element, event) {
-      return fireEvent.keyPress(element, event)
+        throw new Error("STUB");
     },
     function keyup(element, event) {
-      return fireEvent.keyUp(element, event)
+        throw new Error("STUB");
     },
     function click(element, event) {
-      if (element instanceof HTMLButtonElement) return fireEvent.click(element, event)
-      return Ignore
+        throw new Error("STUB");
     },
   ],
   [Keys.Tab.key!]: [
     function keydown(element, event) {
-      return fireEvent.keyDown(element, event)
-    },
+          throw new Error("STUB");
+      },
     function blurAndfocus(_element, event) {
-      return focusNext(event)
+        throw new Error("STUB");
     },
     function keyup(element, event) {
-      return fireEvent.keyUp(element, event)
+        throw new Error("STUB");
     },
   ],
   [Keys.Escape.key!]: [
     function keydown(element, event) {
-      return fireEvent.keyDown(element, event)
-    },
+          throw new Error("STUB");
+      },
     function keypress(element, event) {
-      return fireEvent.keyPress(element, event)
+        throw new Error("STUB");
     },
     function keyup(element, event) {
-      return fireEvent.keyUp(element, event)
+        throw new Error("STUB");
     },
   ],
   [Keys.Backspace.key!]: [
     function keydown(element, event) {
-      if (element instanceof HTMLInputElement) {
-        let ev = Object.assign({}, event, {
-          target: Object.assign({}, event.target, {
-            value: element.value.slice(0, -1),
-          }),
-        })
-
-        fireEvent.keyDown(element, ev)
-        return fireEvent.input(element, ev)
-      }
-
-      return fireEvent.keyDown(element, event)
-    },
+          throw new Error("STUB");
+      },
     function keyup(element, event) {
-      return fireEvent.keyUp(element, event)
+        throw new Error("STUB");
     },
   ],
 }
 
 export async function type(events: Partial<KeyboardEvent>[], element = document.activeElement) {
-  jest.useFakeTimers()
-
-  try {
-    if (element === null) return expect(element).not.toBe(null)
-
-    for (let event of events) {
-      let skip = new Set()
-      let actions = order[event.key!] ?? order[Default as any]
-      for (let action of actions) {
-        let checks = action.name.split('And')
-        if (checks.some((check) => skip.has(check))) continue
-
-        let result = action(element, {
-          type: action.name,
-          charCode: event.key?.length === 1 ? event.key?.charCodeAt(0) : undefined,
-          ...event,
-        })
-        if (result === Ignore) continue
-        if (result instanceof Element) {
-          element = result
-        }
-
-        let cancelled = !result
-        if (cancelled) {
-          let skippablesForKey = cancellations[event.key!] ?? cancellations[Default as any]
-          let skippables = skippablesForKey?.[action.name] ?? new Set()
-
-          for (let skippable of skippables) skip.add(skippable)
-        }
-      }
-    }
-
-    // We don't want to actually wait in our tests, so let's advance
-    jest.runAllTimers()
-
-    await new Promise(nextFrame)
-  } catch (err) {
-    if (err instanceof Error) Error.captureStackTrace(err, type)
-    throw err
-  } finally {
-    jest.useRealTimers()
-  }
+    throw new Error("STUB");
 }
 
 export async function press(event: Partial<KeyboardEvent>, element = document.activeElement) {
-  return type([event], element)
+    throw new Error("STUB");
 }
 
 export enum MouseButton {
@@ -312,128 +245,22 @@ export async function blur(element: Document | Element | Window | Node | null) {
 }
 
 export async function mouseEnter(element: Document | Element | Window | null) {
-  try {
-    if (element === null) return expect(element).not.toBe(null)
-
-    pointer.randomize()
-
-    fireEvent.pointerOver(element, pointer.options)
-    fireEvent.pointerEnter(element, pointer.options)
-    fireEvent.mouseOver(element, pointer.options)
-
-    await new Promise(nextFrame)
-  } catch (err) {
-    if (err instanceof Error) Error.captureStackTrace(err, mouseEnter)
-    throw err
-  }
+    throw new Error("STUB");
 }
 
 export async function mouseMove(element: Document | Element | Window | null) {
-  try {
-    if (element === null) return expect(element).not.toBe(null)
-
-    pointer.advance()
-
-    pointer.bypassingTrackingChecks(() => {
-      fireEvent.pointerMove(element)
-    })
-
-    fireEvent.mouseMove(element, pointer.options)
-
-    await new Promise(nextFrame)
-  } catch (err) {
-    if (err instanceof Error) Error.captureStackTrace(err, mouseMove)
-    throw err
-  }
+    throw new Error("STUB");
 }
 
 export async function mouseLeave(element: Document | Element | Window | null) {
-  try {
-    if (element === null) return expect(element).not.toBe(null)
-
-    pointer.advance()
-
-    pointer.bypassingTrackingChecks(() => {
-      fireEvent.pointerOut(element)
-      fireEvent.pointerLeave(element)
-    })
-
-    fireEvent.mouseOut(element, pointer.options)
-    fireEvent.mouseLeave(element, pointer.options)
-
-    await new Promise(nextFrame)
-  } catch (err) {
-    if (err instanceof Error) Error.captureStackTrace(err, mouseLeave)
-    throw err
-  }
+    throw new Error("STUB");
 }
 
 export async function mouseDrag(
   startingElement: Document | Element | Window | Node | null,
   endingElement: Document | Element | Window | Node | null
 ) {
-  let button = MouseButton.Left
-
-  try {
-    if (startingElement === null) return expect(startingElement).not.toBe(null)
-    if (endingElement === null) return expect(endingElement).not.toBe(null)
-    if (startingElement instanceof HTMLButtonElement && startingElement.disabled) return
-
-    let options = { button }
-
-    // Cancel in pointerDown cancels mouseDown, mouseUp
-    let cancelled = !fireEvent.pointerDown(startingElement, options)
-
-    if (!cancelled) {
-      cancelled = !fireEvent.mouseDown(startingElement, options)
-    }
-
-    // Ensure to trigger a `focus` event if the element is focusable, or within a focusable element
-    if (!cancelled) {
-      let next: HTMLElement | null = startingElement as HTMLElement | null
-      while (next !== null) {
-        if (next.matches(focusableSelector)) {
-          next.focus()
-          break
-        }
-        next = next.parentElement
-      }
-    }
-
-    fireEvent.pointerMove(startingElement, options)
-    if (!cancelled) {
-      fireEvent.mouseMove(startingElement, options)
-    }
-
-    fireEvent.pointerOut(startingElement, options)
-    if (!cancelled) {
-      fireEvent.mouseOut(startingElement, options)
-    }
-
-    // crosses over to the ending element
-
-    fireEvent.pointerOver(endingElement, options)
-    if (!cancelled) {
-      fireEvent.mouseOver(endingElement, options)
-    }
-
-    fireEvent.pointerMove(endingElement, options)
-    if (!cancelled) {
-      fireEvent.mouseMove(endingElement, options)
-    }
-
-    fireEvent.pointerUp(endingElement, options)
-    if (!cancelled) {
-      fireEvent.mouseUp(endingElement, options)
-    }
-
-    fireEvent.click(endingElement, options)
-
-    await new Promise(nextFrame)
-  } catch (err) {
-    if (err instanceof Error) Error.captureStackTrace(err, click)
-    throw err
-  }
+    throw new Error("STUB");
 }
 
 // ---
@@ -477,8 +304,8 @@ let focusableSelector = [
       ? // TODO: Remove this once JSDOM fixes the issue where an element that is
         // "hidden" can be the document.activeElement, because this is not possible
         // in real browsers.
-        (selector) => `${selector}:not([tabindex='-1']):not([style*='display: none'])`
-      : (selector) => `${selector}:not([tabindex='-1'])`
+        (selector) => { throw new Error("STUB"); }
+      : (selector) => { throw new Error("STUB"); }
   )
   .join(',')
 

@@ -20,9 +20,9 @@ interface Props {
 }
 
 export function OpenClosedProvider({ value, children }: Props): ReactElement {
-  return <Context.Provider value={value}>{children}</Context.Provider>
+    throw new Error("STUB");
 }
 
 export function ResetOpenClosedProvider({ children }: { children: React.ReactNode }): ReactElement {
-  return <Context.Provider value={null}>{children}</Context.Provider>
+    throw new Error("STUB");
 }

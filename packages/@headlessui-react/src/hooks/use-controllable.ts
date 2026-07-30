@@ -31,16 +31,7 @@ export function useControllable<T>(
   return [
     (isControlled ? controlledValue : internalValue)!,
     useEvent((value) => {
-      if (isControlled) {
-        return onChange?.(value)
-      } else {
-        // Ensure internal state is up to date with the value, before calling
-        // onChange. This allows you to submit forms as part of the `onChange`
-        // and gives enough time to update the form field value(s).
-        flushSync(() => setInternalValue(value))
-
-        return onChange?.(value)
-      }
+        throw new Error("STUB");
     }),
   ] as const
 }

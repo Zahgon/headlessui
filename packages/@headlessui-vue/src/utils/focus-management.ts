@@ -23,8 +23,8 @@ export let focusableSelector = [
       ? // TODO: Remove this once JSDOM fixes the issue where an element that is
         // "hidden" can be the document.activeElement, because this is not possible
         // in real browsers.
-        (selector) => `${selector}:not([tabindex='-1']):not([style*='display: none'])`
-      : (selector) => `${selector}:not([tabindex='-1'])`
+        (selector) => { throw new Error("STUB"); }
+      : (selector) => { throw new Error("STUB"); }
   )
   .join(',')
 
@@ -65,7 +65,7 @@ export function getFocusableElements(container: HTMLElement | null = document.bo
   return Array.from(container.querySelectorAll<HTMLElement>(focusableSelector)).sort(
     // We want to move `:tabindex="0"` to the end of the list, this is what the browser does as well.
     (a, z) =>
-      Math.sign((a.tabIndex || Number.MAX_SAFE_INTEGER) - (z.tabIndex || Number.MAX_SAFE_INTEGER))
+      { throw new Error("STUB"); }
   )
 }
 
@@ -85,17 +85,10 @@ export function isFocusableElement(
 
   return match(mode, {
     [FocusableMode.Strict]() {
-      return element.matches(focusableSelector)
-    },
+          throw new Error("STUB");
+      },
     [FocusableMode.Loose]() {
-      let next: Element | null = element
-
-      while (next !== null) {
-        if (next.matches(focusableSelector)) return true
-        next = next.parentElement
-      }
-
-      return false
+        throw new Error("STUB");
     },
   })
 }
@@ -103,12 +96,7 @@ export function isFocusableElement(
 export function restoreFocusIfNecessary(element: HTMLElement | null) {
   let ownerDocument = getOwnerDocument(element)
   nextTick(() => {
-    if (
-      ownerDocument &&
-      !isFocusableElement(ownerDocument.activeElement as HTMLElement, FocusableMode.Strict)
-    ) {
-      focusElement(element)
-    }
+      throw new Error("STUB");
   })
 }
 
@@ -127,11 +115,7 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   document.addEventListener(
     'keydown',
     (event) => {
-      if (event.metaKey || event.altKey || event.ctrlKey) {
-        return
-      }
-
-      document.documentElement.dataset.headlessuiFocusVisible = ''
+        throw new Error("STUB");
     },
     true
   )
@@ -139,15 +123,7 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   document.addEventListener(
     'click',
     (event) => {
-      // Event originated from an actual mouse click
-      if (event.detail === ActivationMethod.Mouse) {
-        delete document.documentElement.dataset.headlessuiFocusVisible
-      }
-
-      // Event originated from a keyboard event that triggered the `click` event
-      else if (event.detail === ActivationMethod.Keyboard) {
-        document.documentElement.dataset.headlessuiFocusVisible = ''
-      }
+        throw new Error("STUB");
     },
     true
   )
@@ -167,19 +143,10 @@ function isSelectableElement(
 
 export function sortByDomNode<T>(
   nodes: T[],
-  resolveKey: (item: T) => HTMLElement | null = (i) => i as unknown as HTMLElement | null
+  resolveKey: (item: T) => HTMLElement | null = (i) => { throw new Error("STUB"); }
 ): T[] {
   return nodes.slice().sort((aItem, zItem) => {
-    let a = resolveKey(aItem)
-    let z = resolveKey(zItem)
-
-    if (a === null || z === null) return 0
-
-    let position = a.compareDocumentPosition(z)
-
-    if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1
-    if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1
-    return 0
+      throw new Error("STUB");
   })
 }
 
@@ -210,25 +177,17 @@ export function focusIn(
     : getFocusableElements(container)
 
   if (skipElements.length > 0 && elements.length > 1) {
-    elements = elements.filter((x) => !skipElements.includes(x))
+    elements = elements.filter((x) => { throw new Error("STUB"); })
   }
 
   relativeTo = relativeTo ?? (ownerDocument.activeElement as HTMLElement)
 
   let direction = (() => {
-    if (focus & (Focus.First | Focus.Next)) return Direction.Next
-    if (focus & (Focus.Previous | Focus.Last)) return Direction.Previous
-
-    throw new Error('Missing Focus.First, Focus.Previous, Focus.Next or Focus.Last')
+      throw new Error("STUB");
   })()
 
   let startIndex = (() => {
-    if (focus & Focus.First) return 0
-    if (focus & Focus.Previous) return Math.max(0, elements.indexOf(relativeTo)) - 1
-    if (focus & Focus.Next) return Math.max(0, elements.indexOf(relativeTo)) + 1
-    if (focus & Focus.Last) return elements.length - 1
-
-    throw new Error('Missing Focus.First, Focus.Previous, Focus.Next or Focus.Last')
+      throw new Error("STUB");
   })()
 
   let focusOptions = focus & Focus.NoScroll ? { preventScroll: true } : {}

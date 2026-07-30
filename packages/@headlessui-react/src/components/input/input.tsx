@@ -44,48 +44,7 @@ function InputFn<TTag extends ElementType = typeof DEFAULT_INPUT_TAG>(
   props: InputProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let internalId = useId()
-  let providedId = useProvidedId()
-  let providedDisabled = useDisabled()
-  let {
-    id = providedId || `headlessui-input-${internalId}`,
-    disabled = providedDisabled || false,
-    autoFocus = false,
-    invalid = false,
-    ...theirProps
-  } = props
-
-  let labelledBy = useLabelledBy()
-  let describedBy = useDescribedBy()
-
-  let { isFocused: focus, focusProps } = useFocusRing({ autoFocus })
-  let { isHovered: hover, hoverProps } = useHover({ isDisabled: disabled })
-
-  let ourProps = mergeProps(
-    {
-      ref,
-      id,
-      'aria-labelledby': labelledBy,
-      'aria-describedby': describedBy,
-      'aria-invalid': invalid ? 'true' : undefined,
-      disabled: disabled || undefined,
-      autoFocus,
-    },
-    focusProps,
-    hoverProps
-  )
-
-  let slot = useSlot<InputRenderPropArg>({ disabled, invalid, hover, focus, autofocus: autoFocus })
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot,
-    defaultTag: DEFAULT_INPUT_TAG,
-    name: 'Input',
-  })
+    throw new Error("STUB");
 }
 
 export interface _internal_ComponentInput extends HasDisplayName {

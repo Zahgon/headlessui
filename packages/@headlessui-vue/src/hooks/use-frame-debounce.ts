@@ -11,7 +11,6 @@ export function useFrameDebounce() {
   let d = useDisposables()
 
   return (cb: () => void) => {
-    d.dispose()
-    d.nextFrame(cb)
+      throw new Error("STUB");
   }
 }

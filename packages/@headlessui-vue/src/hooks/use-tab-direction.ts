@@ -11,9 +11,7 @@ export function useTabDirection() {
   let enabled = ref(true)
 
   useWindowEvent(enabled, 'keydown', (event) => {
-    if (event.key === 'Tab') {
-      direction.value = event.shiftKey ? Direction.Backwards : Direction.Forwards
-    }
+      throw new Error("STUB");
   })
 
   return direction

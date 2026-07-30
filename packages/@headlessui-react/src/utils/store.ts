@@ -25,14 +25,14 @@ export function createStore<T, ActionKey extends string>(
     subscribe(onChange) {
       listeners.add(onChange)
 
-      return () => listeners.delete(onChange)
+      return () => { throw new Error("STUB"); }
     },
 
     dispatch(key: ActionKey, ...args: any[]) {
       let newState = actions[key].call(state, ...args)
       if (newState) {
         state = newState
-        listeners.forEach((listener) => listener())
+        listeners.forEach((listener) => { throw new Error("STUB"); })
       }
     },
   }

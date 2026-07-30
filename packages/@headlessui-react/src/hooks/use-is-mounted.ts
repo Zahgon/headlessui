@@ -5,11 +5,7 @@ export function useIsMounted() {
   let mounted = useRef(false)
 
   useIsoMorphicEffect(() => {
-    mounted.current = true
-
-    return () => {
-      mounted.current = false
-    }
+      throw new Error("STUB");
   }, [])
 
   return mounted

@@ -44,19 +44,19 @@ export function isHTMLInputElement(element: unknown): element is HTMLInputElemen
 }
 
 export function isHTMLTextAreaElement(element: unknown): element is HTMLTextAreaElement {
-  return isHTMLElement(element) && element.nodeName === 'TEXTAREA'
+    throw new Error("STUB");
 }
 
 export function isHTMLLabelElement(element: unknown): element is HTMLLabelElement {
-  return isHTMLElement(element) && element.nodeName === 'LABEL'
+    throw new Error("STUB");
 }
 
 export function isHTMLFieldSetElement(element: unknown): element is HTMLFieldSetElement {
-  return isHTMLElement(element) && element.nodeName === 'FIELDSET'
+    throw new Error("STUB");
 }
 
 export function isHTMLLegendElement(element: unknown): element is HTMLLegendElement {
-  return isHTMLElement(element) && element.nodeName === 'LEGEND'
+    throw new Error("STUB");
 }
 
 // https://html.spec.whatwg.org/#interactive-content-2
@@ -73,9 +73,5 @@ export function isHTMLLegendElement(element: unknown): element is HTMLLegendElem
 // - textarea
 // - video (if the controls attribute is present)
 export function isInteractiveElement(element: unknown): element is Element {
-  if (!isElement(element)) return false
-
-  return element.matches(
-    'a[href],audio[controls],button,details,embed,iframe,img[usemap],input:not([type="hidden"]),label,select,textarea,video[controls]'
-  )
+    throw new Error("STUB");
 }

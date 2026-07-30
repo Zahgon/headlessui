@@ -5,7 +5,7 @@ export function useLatestValue<T>(value: T) {
   let cache = useRef(value)
 
   useIsoMorphicEffect(() => {
-    cache.current = value
+      throw new Error("STUB");
   }, [value])
 
   return cache

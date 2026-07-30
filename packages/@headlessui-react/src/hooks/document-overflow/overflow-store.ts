@@ -33,100 +33,30 @@ export interface ScrollLockStep<MetaType extends Record<string, any> = any> {
   after?: (ctx: Context<MetaType>) => void
 }
 
-export let overflows = createStore(() => new Map<Document, DocEntry>(), {
+export let overflows = createStore(() => { throw new Error("STUB"); }, {
   PUSH(doc: Document, meta: MetaFn) {
-    let entry = this.get(doc) ?? {
-      doc,
-      count: 0,
-      d: disposables(),
-      meta: new Set(),
-      computedMeta: {},
-    }
-
-    entry.count++
-    entry.meta.add(meta)
-    entry.computedMeta = buildMeta(entry.meta)
-    this.set(doc, entry)
-
-    return this
-  },
+        throw new Error("STUB");
+    },
 
   POP(doc: Document, meta: MetaFn) {
-    let entry = this.get(doc)
-    if (entry) {
-      entry.count--
-      entry.meta.delete(meta)
-      entry.computedMeta = buildMeta(entry.meta)
-    }
-
-    return this
+      throw new Error("STUB");
   },
 
   SCROLL_PREVENT(entry: DocEntry) {
-    let ctx = {
-      doc: entry.doc,
-      d: entry.d,
-
-      // The moment we `PUSH`, we also `SCROLL_PREVENT`. But a later `PUSH` will
-      // not re-trigger a `SCROLL_PREVENT` because we are already in a locked
-      // state.
-      //
-      // This `meta()` function is called lazily such that a `PUSH` or `POP`
-      // that happens later can update the meta information. Otherwise we would
-      // use stale meta information.
-      meta() {
-        return entry.computedMeta
-      },
-    }
-
-    let steps: ScrollLockStep<any>[] = [
-      handleIOSLocking(),
-      adjustScrollbarPadding(),
-      preventScroll(),
-    ]
-
-    // Run all `before` actions together
-    steps.forEach(({ before }) => before?.(ctx))
-
-    // Run all `after` actions together
-    steps.forEach(({ after }) => after?.(ctx))
+      throw new Error("STUB");
   },
 
   SCROLL_ALLOW({ d }: DocEntry) {
-    d.dispose()
+      throw new Error("STUB");
   },
 
   TEARDOWN({ doc }: DocEntry) {
-    this.delete(doc)
+      throw new Error("STUB");
   },
 })
 
 // Update the document overflow state when the store changes
 // This MUST happen outside of react for this to work properly.
 overflows.subscribe(() => {
-  let docs = overflows.getSnapshot()
-
-  let styles = new Map<Document, string | undefined>()
-
-  // Read data from all the documents
-  for (let [doc] of docs) {
-    styles.set(doc, doc.documentElement.style.overflow)
-  }
-
-  // Write data to all the documents
-  for (let entry of docs.values()) {
-    let isHidden = styles.get(entry.doc) === 'hidden'
-    let isLocked = entry.count !== 0
-    let willChange = (isLocked && !isHidden) || (!isLocked && isHidden)
-
-    if (willChange) {
-      overflows.dispatch(entry.count > 0 ? 'SCROLL_PREVENT' : 'SCROLL_ALLOW', entry)
-    }
-
-    // We have to clean up after ourselves so we don't leak memory
-    // Using a WeakMap would be ideal, but it's not iterable
-    if (entry.count === 0) {
-      overflows.dispatch('TEARDOWN', entry)
-    }
-  }
+    throw new Error("STUB");
 })

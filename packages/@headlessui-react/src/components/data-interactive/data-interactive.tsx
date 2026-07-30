@@ -30,30 +30,7 @@ function DataInteractiveFn<TTag extends ElementType = typeof DEFAULT_DATA_INTERA
   props: DataInteractiveProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let { ...theirProps } = props
-
-  // Ideally we can use a `disabled` prop, but that would depend on the props of the child element
-  // and we don't have access to that in this component.
-
-  let disabled = false
-
-  let { isFocusVisible: focus, focusProps } = useFocusRing()
-  let { isHovered: hover, hoverProps } = useHover({ isDisabled: disabled })
-  let { pressed: active, pressProps } = useActivePress({ disabled })
-
-  let ourProps = mergeProps({ ref }, focusProps, hoverProps, pressProps)
-
-  let slot = useSlot<DataInteractiveRenderPropArg>({ hover, focus, active })
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot,
-    defaultTag: DEFAULT_DATA_INTERACTIVE_TAG,
-    name: 'DataInteractive',
-  })
+    throw new Error("STUB");
 }
 
 export interface _internal_ComponentDataInteractive extends HasDisplayName {

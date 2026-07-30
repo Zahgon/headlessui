@@ -14,8 +14,7 @@ function CloseButtonFn<TTag extends ElementType = typeof DEFAULT_BUTTON_TAG>(
   props: ButtonProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let close = useClose()
-  return <Button ref={ref} {...mergeProps({ onClick: close }, props)} />
+    throw new Error("STUB");
 }
 
 export let CloseButton = forwardRefWithAs(CloseButtonFn) as _internal_ComponentButton

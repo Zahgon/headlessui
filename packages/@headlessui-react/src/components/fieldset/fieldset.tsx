@@ -27,45 +27,7 @@ function FieldsetFn<TTag extends ElementType = typeof DEFAULT_FIELDSET_TAG>(
   props: FieldsetProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let providedDisabled = useDisabled()
-  let { disabled = providedDisabled || false, ...theirProps } = props
-
-  let [tag, resolveTag] = useResolvedTag(props.as ?? DEFAULT_FIELDSET_TAG)
-  let fieldsetRef = useSyncRefs(ref, resolveTag)
-
-  let [labelledBy, LabelProvider] = useLabels()
-
-  let slot = useSlot<FieldsetRenderPropArg>({ disabled })
-
-  let ourProps =
-    tag === 'fieldset'
-      ? {
-          ref: fieldsetRef,
-          'aria-labelledby': labelledBy,
-          disabled: disabled || undefined,
-        }
-      : {
-          ref: fieldsetRef,
-          role: 'group',
-          'aria-labelledby': labelledBy,
-          'aria-disabled': disabled || undefined,
-        }
-
-  let render = useRender()
-
-  return (
-    <DisabledProvider value={disabled}>
-      <LabelProvider>
-        {render({
-          ourProps,
-          theirProps,
-          slot,
-          defaultTag: DEFAULT_FIELDSET_TAG,
-          name: 'Fieldset',
-        })}
-      </LabelProvider>
-    </DisabledProvider>
-  )
+    throw new Error("STUB");
 }
 
 export interface _internal_ComponentFieldset extends HasDisplayName {

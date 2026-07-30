@@ -110,7 +110,7 @@ export enum ActionTypes {
 
 function adjustOrderedState<T>(
   state: State<T>,
-  adjustment: (options: State<T>['options']) => State<T>['options'] = (i) => i
+  adjustment: (options: State<T>['options']) => State<T>['options'] = (i) => { throw new Error("STUB"); }
 ) {
   let currentActiveOption =
     state.activeOptionIndex !== null ? state.options[state.activeOptionIndex] : null
@@ -119,9 +119,9 @@ function adjustOrderedState<T>(
   let sortedOptions =
     list.length > 0 && list[0].dataRef.current.order !== null
       ? // Prefer sorting based on the `order`
-        list.sort((a, z) => a.dataRef.current.order! - z.dataRef.current.order!)
+        list.sort((a, z) => { throw new Error("STUB"); })
       : // Fallback to much slower DOM order
-        sortByDomNode(list, (option) => option.dataRef.current.domRef.current)
+        sortByDomNode(list, (option) => { throw new Error("STUB"); })
 
   // If we inserted an option before the current active option then the active option index
   // would be wrong. To fix this, we will re-lookup the correct index.
@@ -176,263 +176,43 @@ let reducers: {
   [P in ActionTypes]: <T>(state: State<T>, action: Extract<Actions<T>, { type: P }>) => State<T>
 } = {
   [ActionTypes.CloseCombobox](state) {
-    if (state.dataRef.current?.disabled) return state
-    if (state.comboboxState === ComboboxState.Closed) return state
-    let inputPositionState = state.inputElement
-      ? ElementPositionState.Tracked(computeVisualPosition(state.inputElement))
-      : state.inputPositionState
-
-    return {
-      ...state,
-      activeOptionIndex: null,
-      comboboxState: ComboboxState.Closed,
-
-      isTyping: false,
-
-      // Clear the last known activation trigger
-      // This is because if a user interacts with the combobox using a mouse
-      // resulting in it closing we might incorrectly handle the next interaction
-      // for example, not scrolling to the active option in a virtual list
-      activationTrigger: ActivationTrigger.Other,
-
-      inputPositionState,
-
-      __demoMode: false,
-    }
-  },
+        throw new Error("STUB");
+    },
   [ActionTypes.OpenCombobox](state) {
-    if (state.dataRef.current?.disabled) return state
-    if (state.comboboxState === ComboboxState.Open) return state
-
-    // Check if we have a selected value that we can make active
-    if (state.dataRef.current?.value) {
-      let idx = state.dataRef.current.calculateIndex(state.dataRef.current.value)
-      if (idx !== -1) {
-        return {
-          ...state,
-          activeOptionIndex: idx,
-          comboboxState: ComboboxState.Open,
-          __demoMode: false,
-          inputPositionState: ElementPositionState.Idle,
-        }
-      }
-    }
-
-    return {
-      ...state,
-      comboboxState: ComboboxState.Open,
-      inputPositionState: ElementPositionState.Idle,
-      __demoMode: false,
-    }
+      throw new Error("STUB");
   },
   [ActionTypes.SetTyping](state, action) {
-    if (state.isTyping === action.isTyping) return state
-    return { ...state, isTyping: action.isTyping }
+      throw new Error("STUB");
   },
   [ActionTypes.GoToOption](state, action) {
-    if (state.dataRef.current?.disabled) return state
-    if (
-      state.optionsElement &&
-      !state.dataRef.current?.optionsPropsRef.current.static &&
-      state.comboboxState === ComboboxState.Closed
-    ) {
-      return state
-    }
-
-    if (state.virtual) {
-      let { options, disabled } = state.virtual
-      let activeOptionIndex =
-        action.focus === Focus.Specific
-          ? action.idx
-          : calculateActiveIndex(action, {
-              resolveItems: () => options,
-              resolveActiveIndex: () =>
-                state.activeOptionIndex ?? options.findIndex((option) => !disabled(option)) ?? null,
-              resolveDisabled: disabled,
-              resolveId() {
-                throw new Error('Function not implemented.')
-              },
-            })
-
-      let activationTrigger = action.trigger ?? ActivationTrigger.Other
-
-      if (
-        state.activeOptionIndex === activeOptionIndex &&
-        state.activationTrigger === activationTrigger
-      ) {
-        return state
-      }
-
-      return {
-        ...state,
-        activeOptionIndex,
-        activationTrigger,
-        isTyping: false,
-        __demoMode: false,
-      }
-    }
-
-    let adjustedState = adjustOrderedState(state)
-
-    // It's possible that the activeOptionIndex is set to `null` internally, but
-    // this means that we will fallback to the first non-disabled option by default.
-    // We have to take this into account.
-    if (adjustedState.activeOptionIndex === null) {
-      let localActiveOptionIndex = adjustedState.options.findIndex(
-        (option) => !option.dataRef.current.disabled
-      )
-
-      if (localActiveOptionIndex !== -1) {
-        adjustedState.activeOptionIndex = localActiveOptionIndex
-      }
-    }
-
-    let activeOptionIndex =
-      action.focus === Focus.Specific
-        ? action.idx
-        : calculateActiveIndex(action, {
-            resolveItems: () => adjustedState.options,
-            resolveActiveIndex: () => adjustedState.activeOptionIndex,
-            resolveId: (item) => item.id,
-            resolveDisabled: (item) => item.dataRef.current.disabled,
-          })
-    let activationTrigger = action.trigger ?? ActivationTrigger.Other
-
-    if (
-      state.activeOptionIndex === activeOptionIndex &&
-      state.activationTrigger === activationTrigger
-    ) {
-      return state
-    }
-
-    return {
-      ...state,
-      ...adjustedState,
-      isTyping: false,
-      activeOptionIndex,
-      activationTrigger,
-      __demoMode: false,
-    }
+      throw new Error("STUB");
   },
   [ActionTypes.RegisterOption]: (state, action) => {
-    if (state.dataRef.current?.virtual) {
-      return {
-        ...state,
-        options: [...state.options, action.payload],
-      }
-    }
-
-    let option = action.payload
-
-    let adjustedState = adjustOrderedState(state, (options) => {
-      options.push(option)
-      return options
-    })
-
-    // Check if we need to make the newly registered option active.
-    if (state.activeOptionIndex === null) {
-      if (state.dataRef.current.isSelected?.(action.payload.dataRef.current.value)) {
-        adjustedState.activeOptionIndex = adjustedState.options.indexOf(option)
-      }
-    }
-
-    let nextState = {
-      ...state,
-      ...adjustedState,
-      activationTrigger: ActivationTrigger.Other,
-    }
-
-    if (state.dataRef.current?.__demoMode && state.dataRef.current.value === undefined) {
-      nextState.activeOptionIndex = 0
-    }
-
-    return nextState
+      throw new Error("STUB");
   },
   [ActionTypes.UnregisterOption]: (state, action) => {
-    if (state.dataRef.current?.virtual) {
-      return {
-        ...state,
-        options: state.options.filter((option) => option.id !== action.id),
-      }
-    }
-
-    let adjustedState = adjustOrderedState(state, (options) => {
-      let idx = options.findIndex((option) => option.id === action.id)
-      if (idx !== -1) options.splice(idx, 1)
-      return options
-    })
-
-    return {
-      ...state,
-      ...adjustedState,
-      activationTrigger: ActivationTrigger.Other,
-    }
+      throw new Error("STUB");
   },
   [ActionTypes.DefaultToFirstOption]: (state, action) => {
-    if (state.defaultToFirstOption === action.value) return state
-
-    return {
-      ...state,
-      defaultToFirstOption: action.value,
-    }
+      throw new Error("STUB");
   },
   [ActionTypes.SetActivationTrigger]: (state, action) => {
-    if (state.activationTrigger === action.trigger) {
-      return state
-    }
-
-    return {
-      ...state,
-      activationTrigger: action.trigger,
-    }
+      throw new Error("STUB");
   },
   [ActionTypes.UpdateVirtualConfiguration]: (state, action) => {
-    if (state.virtual === null) {
-      return {
-        ...state,
-        virtual: { options: action.options, disabled: action.disabled ?? (() => false) },
-      }
-    }
-
-    if (state.virtual.options === action.options && state.virtual.disabled === action.disabled) {
-      return state
-    }
-
-    let adjustedActiveOptionIndex = state.activeOptionIndex
-    if (state.activeOptionIndex !== null) {
-      let idx = action.options.indexOf(state.virtual.options[state.activeOptionIndex])
-      if (idx !== -1) {
-        adjustedActiveOptionIndex = idx
-      } else {
-        adjustedActiveOptionIndex = null
-      }
-    }
-
-    return {
-      ...state,
-      activeOptionIndex: adjustedActiveOptionIndex,
-      virtual: { options: action.options, disabled: action.disabled ?? (() => false) },
-    }
+      throw new Error("STUB");
   },
   [ActionTypes.SetInputElement]: (state, action) => {
-    if (state.inputElement === action.element) return state
-    return { ...state, inputElement: action.element }
+      throw new Error("STUB");
   },
   [ActionTypes.SetButtonElement]: (state, action) => {
-    if (state.buttonElement === action.element) return state
-    return { ...state, buttonElement: action.element }
+      throw new Error("STUB");
   },
   [ActionTypes.SetOptionsElement]: (state, action) => {
-    if (state.optionsElement === action.element) return state
-    return { ...state, optionsElement: action.element }
+      throw new Error("STUB");
   },
   [ActionTypes.MarkInputAsMoved](state) {
-    if (state.inputPositionState.kind !== 'Tracked') return state
-
-    return {
-      ...state,
-      inputPositionState: ElementPositionState.Moved,
-    }
+      throw new Error("STUB");
   },
 }
 
@@ -460,7 +240,7 @@ export class ComboboxMachine<T> extends Machine<State<T>, Actions<T>> {
       options: [],
       // @ts-expect-error TODO: Ensure we use the correct type
       virtual: virtual
-        ? { options: virtual.options, disabled: virtual.disabled ?? (() => false) }
+        ? { options: virtual.options, disabled: virtual.disabled ?? (() => { throw new Error("STUB"); }) }
         : null,
       activeOptionIndex: null,
       activationTrigger: ActivationTrigger.Other,
@@ -473,225 +253,75 @@ export class ComboboxMachine<T> extends Machine<State<T>, Actions<T>> {
   }
 
   constructor(initialState: State<T>) {
-    super(initialState)
-
-    // When the combobox is open, and it's not on the top of the hierarchy, we
-    // should close it again.
-    {
-      let id = this.state.id
-      let stackMachine = stackMachines.get(null)
-
-      this.disposables.add(
-        stackMachine.on(StackActionTypes.Push, (state) => {
-          if (
-            !stackMachine.selectors.isTop(state, id) &&
-            this.state.comboboxState === ComboboxState.Open
-          ) {
-            this.actions.closeCombobox()
-          }
-        })
-      )
-
-      this.on(ActionTypes.OpenCombobox, () => stackMachine.actions.push(id))
-      this.on(ActionTypes.CloseCombobox, () => stackMachine.actions.pop(id))
-    }
-
-    // Track whether the input moved or not
-    this.disposables.group((d) => {
-      this.on(ActionTypes.CloseCombobox, (state) => {
-        if (!state.inputElement) return
-
-        d.dispose()
-        d.add(
-          detectMovement(state.inputElement, state.inputPositionState, () => {
-            this.send({ type: ActionTypes.MarkInputAsMoved })
-          })
-        )
-      })
-    })
+      throw new Error("STUB");
   }
 
   actions = {
     onChange: (newValue: T) => {
-      let { onChange, compare, mode, value } = this.state.dataRef.current
-
-      return match(mode, {
-        [ValueMode.Single]: () => {
-          return onChange?.(newValue)
-        },
-        [ValueMode.Multi]: () => {
-          let copy = (value as T[]).slice()
-
-          let idx = copy.findIndex((item) => compare(item, newValue))
-          if (idx === -1) {
-            copy.push(newValue)
-          } else {
-            copy.splice(idx, 1)
-          }
-
-          return onChange?.(copy as T)
-        },
-      })
-    },
+          throw new Error("STUB");
+      },
     registerOption: (id: string, dataRef: ComboboxOptionDataRef<T>) => {
-      this.send({ type: ActionTypes.RegisterOption, payload: { id, dataRef } })
-      return () => {
-        // When we are unregistering the currently active option, then we also have to make sure to
-        // reset the `defaultToFirstOption` flag, so that visually something is selected and the next
-        // time you press a key on your keyboard it will go to the proper next or previous option in
-        // the list.
-        //
-        // Since this was the active option and it could have been anywhere in the list, resetting to
-        // the very first option seems like a fine default. We _could_ be smarter about this by going
-        // to the previous / next item in list if we know the direction of the keyboard navigation,
-        // but that might be too complex/confusing from an end users perspective.
-        if (
-          this.state.activeOptionIndex ===
-          this.state.dataRef.current.calculateIndex(dataRef.current.value)
-        ) {
-          this.send({ type: ActionTypes.DefaultToFirstOption, value: true })
-        }
-
-        this.send({ type: ActionTypes.UnregisterOption, id })
-      }
+        throw new Error("STUB");
     },
     goToOption: (
       focus: { focus: Focus.Specific; idx: number } | { focus: Exclude<Focus, Focus.Specific> },
       trigger?: ActivationTrigger
     ) => {
-      this.send({ type: ActionTypes.DefaultToFirstOption, value: false })
-      return this.send({ type: ActionTypes.GoToOption, ...focus, trigger })
+        throw new Error("STUB");
     },
     setIsTyping: (isTyping: boolean) => {
-      this.send({ type: ActionTypes.SetTyping, isTyping })
+        throw new Error("STUB");
     },
     closeCombobox: () => {
-      this.send({ type: ActionTypes.CloseCombobox })
-      this.send({ type: ActionTypes.DefaultToFirstOption, value: false })
-      this.state.dataRef.current.onClose?.()
+        throw new Error("STUB");
     },
     openCombobox: () => {
-      this.send({ type: ActionTypes.OpenCombobox })
-      this.send({ type: ActionTypes.DefaultToFirstOption, value: true })
+        throw new Error("STUB");
     },
     setActivationTrigger: (trigger: ActivationTrigger) => {
-      this.send({ type: ActionTypes.SetActivationTrigger, trigger })
+        throw new Error("STUB");
     },
     selectActiveOption: () => {
-      let activeOptionIndex = this.selectors.activeOptionIndex(this.state)
-      if (activeOptionIndex === null) return
-
-      this.actions.setIsTyping(false)
-
-      if (this.state.virtual) {
-        this.actions.onChange(this.state.virtual.options[activeOptionIndex])
-      } else {
-        let { dataRef } = this.state.options[activeOptionIndex]
-        this.actions.onChange(dataRef.current.value)
-      }
-
-      // It could happen that the `activeOptionIndex` stored in state is actually null, but we are
-      // getting the fallback active option back instead.
-      this.actions.goToOption({ focus: Focus.Specific, idx: activeOptionIndex })
+        throw new Error("STUB");
     },
     setInputElement: (element: HTMLInputElement | null) => {
-      this.send({ type: ActionTypes.SetInputElement, element })
+        throw new Error("STUB");
     },
     setButtonElement: (element: HTMLButtonElement | null) => {
-      this.send({ type: ActionTypes.SetButtonElement, element })
+        throw new Error("STUB");
     },
     setOptionsElement: (element: HTMLElement | null) => {
-      this.send({ type: ActionTypes.SetOptionsElement, element })
+        throw new Error("STUB");
     },
   }
 
   selectors = {
     activeDescendantId: (state: State<T>) => {
-      let activeOptionIndex = this.selectors.activeOptionIndex(state)
-      if (activeOptionIndex === null) {
-        return undefined
-      }
-
-      if (!state.virtual) {
-        return state.options[activeOptionIndex]?.id
-      }
-
-      return state.options.find((option) => {
-        return (
-          !option.dataRef.current.disabled &&
-          state.dataRef.current.compare(
-            option.dataRef.current.value,
-            state.virtual!.options[activeOptionIndex]
-          )
-        )
-      })?.id
-    },
+          throw new Error("STUB");
+      },
 
     activeOptionIndex: (state: State<T>) => {
-      if (
-        state.defaultToFirstOption &&
-        state.activeOptionIndex === null &&
-        (state.virtual ? state.virtual.options.length > 0 : state.options.length > 0)
-      ) {
-        if (state.virtual) {
-          let { options, disabled } = state.virtual
-          let activeOptionIndex = options.findIndex((option) => !(disabled?.(option) ?? false))
-
-          if (activeOptionIndex !== -1) {
-            return activeOptionIndex
-          }
-        }
-
-        let activeOptionIndex = state.options.findIndex((option) => {
-          return !option.dataRef.current.disabled
-        })
-
-        if (activeOptionIndex !== -1) {
-          return activeOptionIndex
-        }
-      }
-
-      return state.activeOptionIndex
+        throw new Error("STUB");
     },
 
     activeOption: (state: State<T>) => {
-      let activeOptionIndex = this.selectors.activeOptionIndex(state)
-      return activeOptionIndex === null
-        ? null
-        : state.virtual
-          ? state.virtual.options[activeOptionIndex ?? 0]
-          : state.options[activeOptionIndex]?.dataRef.current.value ?? null
+        throw new Error("STUB");
     },
 
     isActive: (state: State<T>, value: T, id: string) => {
-      let activeOptionIndex = this.selectors.activeOptionIndex(state)
-      if (activeOptionIndex === null) return false
-
-      if (state.virtual) {
-        return activeOptionIndex === state.dataRef.current.calculateIndex(value)
-      }
-
-      return state.options[activeOptionIndex]?.id === id
+        throw new Error("STUB");
     },
 
     shouldScrollIntoView: (state: State<T>, value: T, id: string): boolean => {
-      if (state.virtual) return false
-      if (state.__demoMode) return false
-      if (state.comboboxState !== ComboboxState.Open) return false
-      if (state.activationTrigger === ActivationTrigger.Pointer) return false
-
-      let active = this.selectors.isActive(state, value, id)
-      if (!active) return false
-
-      return true
+        throw new Error("STUB");
     },
 
     didInputMove(state: State<T>) {
-      return state.inputPositionState.kind === 'Moved'
+        throw new Error("STUB");
     },
   }
 
   reduce(state: Readonly<State<T>>, action: Actions<T>): State<T> {
-    return match(action.type, reducers, state, action) as State<T>
+      throw new Error("STUB");
   }
 }

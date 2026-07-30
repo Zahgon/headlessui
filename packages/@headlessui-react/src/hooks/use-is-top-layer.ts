@@ -33,10 +33,7 @@ export function useIsTopLayer(enabled: boolean, scope: string | null) {
   let [isTop, onStack] = useSlice(
     stackMachine,
     useCallback(
-      (state) => [
-        stackMachine.selectors.isTop(state, id),
-        stackMachine.selectors.inStack(state, id),
-      ],
+      (state) => { throw new Error("STUB"); },
       [stackMachine, id]
     )
   )
@@ -44,9 +41,7 @@ export function useIsTopLayer(enabled: boolean, scope: string | null) {
   // Depending on the enable state, push/pop the current `id` to/from the
   // hierarchy.
   useIsoMorphicEffect(() => {
-    if (!enabled) return
-    stackMachine.actions.push(id)
-    return () => stackMachine.actions.pop(id)
+      throw new Error("STUB");
   }, [stackMachine, enabled, id])
 
   // If the hook is not enabled, we know for sure it is not going to be the

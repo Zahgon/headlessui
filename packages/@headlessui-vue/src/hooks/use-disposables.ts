@@ -7,6 +7,6 @@ import { disposables } from '../utils/disposables'
  */
 export function useDisposables() {
   let d = disposables()
-  onUnmounted(() => d.dispose())
+  onUnmounted(() => { throw new Error("STUB"); })
   return d
 }

@@ -54,28 +54,22 @@ let reducers: {
   [P in ActionTypes]: (state: State, action: Extract<Actions, { type: P }>) => State
 } = {
   [ActionTypes.OpenPopover]: (state) => {
-    if (state.popoverState === PopoverStates.Open) return state
-    return { ...state, popoverState: PopoverStates.Open, __demoMode: false }
-  },
+        throw new Error("STUB");
+    },
   [ActionTypes.ClosePopover](state) {
-    if (state.popoverState === PopoverStates.Closed) return state
-    return { ...state, popoverState: PopoverStates.Closed, __demoMode: false }
+      throw new Error("STUB");
   },
   [ActionTypes.SetButton](state, action) {
-    if (state.button === action.button) return state
-    return { ...state, button: action.button }
+      throw new Error("STUB");
   },
   [ActionTypes.SetButtonId](state, action) {
-    if (state.buttonId === action.buttonId) return state
-    return { ...state, buttonId: action.buttonId }
+      throw new Error("STUB");
   },
   [ActionTypes.SetPanel](state, action) {
-    if (state.panel === action.panel) return state
-    return { ...state, panel: action.panel }
+      throw new Error("STUB");
   },
   [ActionTypes.SetPanelId](state, action) {
-    if (state.panelId === action.panelId) return state
-    return { ...state, panelId: action.panelId }
+      throw new Error("STUB");
   },
 }
 
@@ -97,84 +91,30 @@ export class PopoverMachine extends Machine<State, Actions> {
   }
 
   constructor(initialState: State) {
-    super(initialState)
-
-    {
-      let id = this.state.id
-      let stackMachine = stackMachines.get(null)
-
-      this.on(ActionTypes.OpenPopover, () => stackMachine.actions.push(id))
-      this.on(ActionTypes.ClosePopover, () => stackMachine.actions.pop(id))
-    }
+      throw new Error("STUB");
   }
 
   reduce(state: Readonly<State>, action: Actions): State {
-    return match(action.type, reducers, state, action)
+      throw new Error("STUB");
   }
 
   actions = {
-    close: () => this.send({ type: ActionTypes.ClosePopover }),
+    close: () => { throw new Error("STUB"); },
     refocusableClose: (
       focusableElement?: HTMLElement | { current: HTMLElement | null } | MouseEvent<HTMLElement>
     ) => {
-      this.actions.close()
-
-      let restoreElement = (() => {
-        if (!focusableElement) return this.state.button
-        if (DOM.isHTMLElement(focusableElement)) return focusableElement
-        if ('current' in focusableElement && DOM.isHTMLElement(focusableElement.current)) {
-          return focusableElement.current
-        }
-
-        return this.state.button
-      })()
-
-      restoreElement?.focus()
+        throw new Error("STUB");
     },
-    open: () => this.send({ type: ActionTypes.OpenPopover }),
-    setButtonId: (id: string | null) => this.send({ type: ActionTypes.SetButtonId, buttonId: id }),
-    setButton: (button: HTMLElement | null) => this.send({ type: ActionTypes.SetButton, button }),
-    setPanelId: (id: string | null) => this.send({ type: ActionTypes.SetPanelId, panelId: id }),
-    setPanel: (panel: HTMLElement | null) => this.send({ type: ActionTypes.SetPanel, panel }),
+    open: () => { throw new Error("STUB"); },
+    setButtonId: (id: string | null) => { throw new Error("STUB"); },
+    setButton: (button: HTMLElement | null) => { throw new Error("STUB"); },
+    setPanelId: (id: string | null) => { throw new Error("STUB"); },
+    setPanel: (panel: HTMLElement | null) => { throw new Error("STUB"); },
   }
 
   selectors = {
     isPortalled: (state: State) => {
-      if (!state.button) return false
-      if (!state.panel) return false
-
-      let ownerDocument = getOwnerDocument(state.button) ?? document
-
-      // We are part of a different "root" tree, so therefore we can consider it portalled. This is a
-      // heuristic because 3rd party tools could use some form of portal, typically rendered at the
-      // end of the body but we don't have an actual reference to that.
-      for (let root of ownerDocument.querySelectorAll('body > *')) {
-        if (Number(root?.contains(state.button)) ^ Number(root?.contains(state.panel))) {
-          return true
-        }
-      }
-
-      // Use another heuristic to try and calculate whether or not the focusable
-      // elements are near each other (aka, following the default focus/tab order
-      // from the browser). If they are then it doesn't really matter if they are
-      // portalled or not because we can follow the default tab order. But if they
-      // are not, then we can consider it being portalled so that we can ensure
-      // that tab and shift+tab (hopefully) go to the correct spot.
-      let elements = getFocusableElements(ownerDocument)
-      let buttonIdx = elements.indexOf(state.button)
-
-      let beforeIdx = (buttonIdx + elements.length - 1) % elements.length
-      let afterIdx = (buttonIdx + 1) % elements.length
-
-      let beforeElement = elements[beforeIdx]
-      let afterElement = elements[afterIdx]
-
-      if (!state.panel.contains(beforeElement) && !state.panel.contains(afterElement)) {
-        return true
-      }
-
-      // It may or may not be portalled, but we don't really know.
-      return false
-    },
+          throw new Error("STUB");
+      },
   }
 }

@@ -44,7 +44,7 @@ export function useRootContainers({
       if (container.id === 'headlessui-portal-root') continue // Skip the Headless UI portal root
       if (container.contains(dom(mainTreeNodeRef))) continue // Skip if it is the main app
       if (container.contains((dom(mainTreeNodeRef)?.getRootNode() as ShadowRoot)?.host)) continue // Skip if it is the main app (and the component is inside a shadow root)
-      if (containers.some((defaultContainer) => container.contains(defaultContainer))) continue // Skip if the current container is part of a container we've already seen (e.g.: default container / portal)
+      if (containers.some((defaultContainer) => { throw new Error("STUB"); })) continue // Skip if the current container is part of a container we've already seen (e.g.: default container / portal)
 
       containers.push(container)
     }
@@ -55,12 +55,11 @@ export function useRootContainers({
   return {
     resolveContainers,
     contains(element: HTMLElement) {
-      return resolveContainers().some((container) => container.contains(element))
+      return resolveContainers().some((container) => { throw new Error("STUB"); })
     },
     mainTreeNodeRef,
     MainTreeNode() {
-      if (_mainTreeNodeRef != null) return null
-      return h(Hidden, { features: HiddenFeatures.Hidden, ref: mainTreeNodeRef })
+        throw new Error("STUB");
     },
   }
 }
@@ -71,7 +70,7 @@ export function useMainTreeNode() {
   return {
     mainTreeNodeRef,
     MainTreeNode() {
-      return h(Hidden, { features: HiddenFeatures.Hidden, ref: mainTreeNodeRef })
+        throw new Error("STUB");
     },
   }
 }

@@ -11,28 +11,15 @@ export class FakePointer {
   }
 
   get options() {
-    return {
-      screenX: this.x,
-      screenY: this.y,
-    }
+      throw new Error("STUB");
   }
 
   randomize() {
-    this.x = Math.floor(Math.random() * this.width)
-    this.y = Math.floor(Math.random() * this.height)
+      throw new Error("STUB");
   }
 
   advance(amount: number = 1) {
-    this.x += amount
-
-    if (this.x >= this.width) {
-      this.x %= this.width
-      this.y++
-    }
-
-    if (this.y >= this.height) {
-      this.y %= this.height
-    }
+      throw new Error("STUB");
   }
 
   /**
@@ -42,10 +29,7 @@ export class FakePointer {
    * This runs the callback with the TEST_IGNORE_TRACKED_POINTER environment variable set to 1 so we bypass the checks.
    */
   bypassingTrackingChecks(callback: () => void) {
-    let original = process.env.TEST_BYPASS_TRACKED_POINTER
-    process.env.TEST_BYPASS_TRACKED_POINTER = '1'
-    callback()
-    process.env.TEST_BYPASS_TRACKED_POINTER = original
+      throw new Error("STUB");
   }
 }
 

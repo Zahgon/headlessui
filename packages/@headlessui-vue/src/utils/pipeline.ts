@@ -3,18 +3,5 @@ export interface Middleware<ReqType> {
 }
 
 export function pipeline<ReqType>(handlers: Middleware<ReqType>[]) {
-  return (request: ReqType, andThen?: (req: ReqType) => void) => {
-    let index = 0
-
-    function next() {
-      let handler = handlers[index++]
-      if (handler) {
-        handler(request, next)
-      } else if (andThen) {
-        andThen(request)
-      }
-    }
-
-    next()
-  }
+    throw new Error("STUB");
 }

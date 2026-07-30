@@ -9,15 +9,6 @@ export function useWatch<T extends any[]>(
   let action = useEvent(cb)
 
   useEffect(() => {
-    let oldValues = [...track.current] as [...T]
-
-    for (let [idx, value] of dependencies.entries()) {
-      if (track.current[idx] !== value) {
-        // At least 1 item changed
-        let returnValue = action(dependencies, oldValues)
-        track.current = dependencies
-        return returnValue
-      }
-    }
+      throw new Error("STUB");
   }, [action, ...dependencies])
 }

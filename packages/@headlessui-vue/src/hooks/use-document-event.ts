@@ -10,9 +10,6 @@ export function useDocumentEvent<TType extends keyof DocumentEventMap>(
   if (env.isServer) return
 
   watchEffect((onInvalidate) => {
-    if (!enabled.value) return
-
-    document.addEventListener(type, listener, options)
-    onInvalidate(() => document.removeEventListener(type, listener, options))
+      throw new Error("STUB");
   })
 }

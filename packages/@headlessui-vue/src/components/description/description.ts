@@ -46,9 +46,7 @@ export function useDescriptions({
     descriptionIds.value.push(value)
 
     return () => {
-      let idx = descriptionIds.value.indexOf(value)
-      if (idx === -1) return
-      descriptionIds.value.splice(idx, 1)
+        throw new Error("STUB");
     }
   }
 
@@ -56,7 +54,7 @@ export function useDescriptions({
 
   // The actual id's as string or undefined.
   return computed(() =>
-    descriptionIds.value.length > 0 ? descriptionIds.value.join(' ') : undefined
+    { throw new Error("STUB"); }
   )
 }
 
@@ -66,32 +64,9 @@ export let Description = defineComponent({
   name: 'Description',
   props: {
     as: { type: [Object, String], default: 'p' },
-    id: { type: String, default: () => `headlessui-description-${useId()}` },
+    id: { type: String, default: () => { throw new Error("STUB"); } },
   },
   setup(myProps, { attrs, slots }) {
-    let context = useDescriptionContext()
-
-    onMounted(() => onUnmounted(context.register(myProps.id)))
-
-    return () => {
-      let { name = 'Description', slot = ref({}), props = {} } = context
-      let { id, ...theirProps } = myProps
-      let ourProps = {
-        ...Object.entries(props).reduce(
-          (acc, [key, value]) => Object.assign(acc, { [key]: unref(value) }),
-          {}
-        ),
-        id,
-      }
-
-      return render({
-        ourProps,
-        theirProps,
-        slot: slot.value,
-        attrs,
-        slots,
-        name,
-      })
-    }
+      throw new Error("STUB");
   },
 })

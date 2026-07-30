@@ -50,80 +50,7 @@ export let Portal = defineComponent({
     as: { type: [Object, String], default: 'div' },
   },
   setup(props, { slots, attrs }) {
-    let element = ref<HTMLElement | null>(null)
-    let ownerDocument = computed(() => getOwnerDocument(element))
-
-    let forcePortalRoot = usePortalRoot()
-    let groupContext = inject(PortalGroupContext, null)
-    let myTarget = ref(
-      forcePortalRoot === true
-        ? getPortalRoot(element.value)
-        : groupContext == null
-          ? getPortalRoot(element.value)
-          : groupContext.resolveTarget()
-    )
-
-    let ready = ref(false)
-    onMounted(() => {
-      ready.value = true
-    })
-
-    watchEffect(() => {
-      if (forcePortalRoot) return
-      if (groupContext == null) return
-      myTarget.value = groupContext.resolveTarget()
-    })
-
-    let parent = inject(PortalParentContext, null)
-
-    // Since the element is mounted lazily (because of SSR hydration)
-    // We use `watch` on `element` + a local var rather than
-    // `onMounted` to ensure registration only happens once
-    let didRegister = false
-    let instance = getCurrentInstance()
-    watch(element, () => {
-      if (didRegister) return
-      if (!parent) return
-      let domElement = dom(element)
-      if (!domElement) return
-      onUnmounted(parent.register(domElement), instance)
-      didRegister = true
-    })
-
-    onUnmounted(() => {
-      let root = ownerDocument.value?.getElementById('headlessui-portal-root')
-      if (!root) return
-      if (myTarget.value !== root) return
-
-      if (myTarget.value.children.length <= 0) {
-        myTarget.value.parentElement?.removeChild(myTarget.value)
-      }
-    })
-
-    return () => {
-      if (!ready.value) return null
-      if (myTarget.value === null) return null
-
-      let ourProps = {
-        ref: element,
-        'data-headlessui-portal': '',
-      }
-
-      return h(
-        // @ts-expect-error Children can be an object, but TypeScript is not happy
-        // with it. Once this is fixed upstream we can remove this assertion.
-        Teleport,
-        { to: myTarget.value },
-        render({
-          ourProps,
-          theirProps: props,
-          slot: {},
-          attrs,
-          slots,
-          name: 'Portal',
-        })
-      )
-    }
+      throw new Error("STUB");
   },
 })
 
@@ -142,7 +69,7 @@ export function useNestedPortals() {
   function register(portal: HTMLElement) {
     portals.value.push(portal)
     if (parent) parent.register(portal)
-    return () => unregister(portal)
+    return () => { throw new Error("STUB"); }
   }
 
   function unregister(portal: HTMLElement) {
@@ -162,8 +89,7 @@ export function useNestedPortals() {
     defineComponent({
       name: 'PortalWrapper',
       setup(_, { slots }) {
-        provide(PortalParentContext, api)
-        return () => slots.default?.()
+          throw new Error("STUB");
       },
     }),
   ] as const
@@ -182,25 +108,6 @@ export let PortalGroup = defineComponent({
     target: { type: Object as PropType<HTMLElement | null>, default: null },
   },
   setup(props, { attrs, slots }) {
-    let api = reactive({
-      resolveTarget() {
-        return props.target
-      },
-    })
-
-    provide(PortalGroupContext, api)
-
-    return () => {
-      let { target: _, ...theirProps } = props
-
-      return render({
-        theirProps,
-        ourProps: {},
-        slot: {},
-        attrs,
-        slots,
-        name: 'PortalGroup',
-      })
-    }
+      throw new Error("STUB");
   },
 })

@@ -20,21 +20,6 @@ export function useTreeWalker({
   enabled?: ComputedRef<boolean>
 }) {
   watchEffect(() => {
-    let root = container.value
-    if (!root) return
-    if (enabled !== undefined && !enabled.value) return
-    let ownerDocument = getOwnerDocument(container)
-    if (!ownerDocument) return
-
-    let acceptNode = Object.assign((node: HTMLElement) => accept(node), { acceptNode: accept })
-    let walker = ownerDocument.createTreeWalker(
-      root,
-      NodeFilter.SHOW_ELEMENT,
-      acceptNode,
-      // @ts-expect-error This `false` is a simple small fix for older browsers
-      false
-    )
-
-    while (walker.nextNode()) walk(walker.currentNode as HTMLElement)
+      throw new Error("STUB");
   })
 }

@@ -9,5 +9,5 @@ export let useEvent =
     R = ReturnType<F>,
   >(cb: (...args: P) => R) {
     let cache = useLatestValue(cb)
-    return React.useCallback((...args: P) => cache.current(...args), [cache])
+    return React.useCallback((...args: P) => { throw new Error("STUB"); }, [cache])
   }

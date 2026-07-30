@@ -59,13 +59,10 @@ export function render({
 
     return match(strategy, {
       [RenderStrategy.Unmount]() {
-        return null
-      },
+            throw new Error("STUB");
+        },
       [RenderStrategy.Hidden]() {
-        return _render({
-          ...main,
-          props: { ...props, hidden: true, style: { display: 'none' } },
-        })
+          throw new Error("STUB");
       },
     })
   }
@@ -122,10 +119,10 @@ function _render({
             `However we need to passthrough the following props:`,
             Object.keys(incomingProps)
               .concat(Object.keys(attrs))
-              .map((name) => name.trim())
-              .filter((current, idx, all) => all.indexOf(current) === idx)
-              .sort((a, z) => a.localeCompare(z))
-              .map((line) => `  - ${line}`)
+              .map((name) => { throw new Error("STUB"); })
+              .filter((current, idx, all) => { throw new Error("STUB"); })
+              .sort((a, z) => { throw new Error("STUB"); })
+              .map((line) => { throw new Error("STUB"); })
               .join('\n'),
             '',
             'You can apply a few solutions:',
@@ -133,7 +130,7 @@ function _render({
               'Add an `as="..."` prop, to ensure that we render an actual element instead of a "template".',
               'Render a single element as the child so that we can forward the props onto that element.',
             ]
-              .map((line) => `  - ${line}`)
+              .map((line) => { throw new Error("STUB"); })
               .join('\n'),
           ].join('\n')
         )
@@ -163,7 +160,7 @@ function _render({
   }
 
   return h(as, Object.assign({}, incomingProps, dataAttributes), {
-    default: () => children,
+    default: () => { throw new Error("STUB"); },
   })
 }
 
@@ -186,11 +183,7 @@ function _render({
  */
 function flattenFragments(children: VNode[]): VNode[] {
   return children.flatMap((child) => {
-    if (child.type === Fragment) {
-      return flattenFragments(child.children as VNode[])
-    }
-
-    return [child]
+      throw new Error("STUB");
   })
 }
 
@@ -226,7 +219,7 @@ function mergeProps(...listOfProps: Record<any, any>[]) {
       // important because of the `cloneElement` from above, which merges the
       // existing and new props, they don't just override therefore we have to
       // explicitly nullify them.
-      Object.fromEntries(Object.keys(eventHandlers).map((eventName) => [eventName, undefined]))
+      Object.fromEntries(Object.keys(eventHandlers).map((eventName) => { throw new Error("STUB"); }))
     )
   }
 
@@ -234,16 +227,8 @@ function mergeProps(...listOfProps: Record<any, any>[]) {
   for (let eventName in eventHandlers) {
     Object.assign(target, {
       [eventName](event: { defaultPrevented: boolean }, ...args: any[]) {
-        let handlers = eventHandlers[eventName]
-
-        for (let handler of handlers) {
-          if (event instanceof Event && event.defaultPrevented) {
-            return
-          }
-
-          handler(event, ...args)
-        }
-      },
+            throw new Error("STUB");
+        },
     })
   }
 

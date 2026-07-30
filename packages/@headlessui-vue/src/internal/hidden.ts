@@ -19,40 +19,6 @@ export let Hidden = defineComponent({
     features: { type: Number as PropType<Features>, default: Features.None },
   },
   setup(props, { slots, attrs }) {
-    return () => {
-      let { features, ...theirProps } = props
-      let ourProps = {
-        'aria-hidden':
-          (features & Features.Focusable) === Features.Focusable
-            ? true
-            : // @ts-ignore
-              theirProps['aria-hidden'] ?? undefined,
-        hidden: (features & Features.Hidden) === Features.Hidden ? true : undefined,
-        style: {
-          position: 'fixed',
-          top: 1,
-          left: 1,
-          width: 1,
-          height: 0,
-          padding: 0,
-          margin: -1,
-          overflow: 'hidden',
-          clip: 'rect(0, 0, 0, 0)',
-          whiteSpace: 'nowrap',
-          borderWidth: '0',
-          ...((features & Features.Hidden) === Features.Hidden &&
-            !((features & Features.Focusable) === Features.Focusable) && { display: 'none' }),
-        },
-      }
-
-      return render({
-        ourProps,
-        theirProps,
-        slot: {},
-        attrs,
-        slots,
-        name: 'Hidden',
-      })
-    }
+      throw new Error("STUB");
   },
 })

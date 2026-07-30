@@ -10,7 +10,9 @@ export enum StackMessage {
 }
 
 export function useStackContext() {
-  return inject(StackContext, () => {})
+  return inject(StackContext, () => {
+      throw new Error("STUB");
+  })
 }
 
 export function useStackProvider({
@@ -35,23 +37,11 @@ export function useStackProvider({
   }
 
   onMounted(() => {
-    watch(
-      enabled,
-      (isEnabled, oldIsEnabled) => {
-        if (isEnabled) {
-          notify(StackMessage.Add, type, element)
-        } else if (oldIsEnabled === true) {
-          notify(StackMessage.Remove, type, element)
-        }
-      },
-      { immediate: true, flush: 'sync' }
-    )
+      throw new Error("STUB");
   })
 
   onUnmounted(() => {
-    if (enabled.value) {
-      notify(StackMessage.Remove, type, element)
-    }
+      throw new Error("STUB");
   })
 
   provide(StackContext, notify)

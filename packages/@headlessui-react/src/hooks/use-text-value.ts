@@ -7,19 +7,6 @@ export function useTextValue(element: MutableRefObject<HTMLElement | null>) {
   let cacheValue = useRef<string>('')
 
   return useEvent(() => {
-    let el = element.current
-    if (!el) return ''
-
-    // Check for a cached version
-    let currentKey = el.innerText
-    if (cacheKey.current === currentKey) {
-      return cacheValue.current
-    }
-
-    // Calculate the value
-    let value = getTextValue(el).trim().toLowerCase()
-    cacheKey.current = currentKey
-    cacheValue.current = value
-    return value
+      throw new Error("STUB");
   })
 }

@@ -72,33 +72,7 @@ export function useLabels({ inherit = false } = {}): [
 
     // The provider component
     useMemo(() => {
-      return function LabelProvider(props: LabelProviderProps) {
-        let register = useEvent((value: string) => {
-          setLabelIds((existing) => [...existing, value])
-
-          return () => {
-            return setLabelIds((existing) => {
-              let clone = existing.slice()
-              let idx = clone.indexOf(value)
-              if (idx !== -1) clone.splice(idx, 1)
-              return clone
-            })
-          }
-        })
-
-        let contextBag = useMemo(
-          () => ({
-            register,
-            slot: props.slot,
-            name: props.name,
-            props: props.props,
-            value: props.value,
-          }),
-          [register, props.slot, props.name, props.props, props.value]
-        )
-
-        return <LabelContext.Provider value={contextBag}>{props.children}</LabelContext.Provider>
-      }
+        throw new Error("STUB");
     }, [setLabelIds]),
   ]
 }
@@ -116,123 +90,7 @@ function LabelFn<TTag extends ElementType = typeof DEFAULT_LABEL_TAG>(
   props: LabelProps<TTag>,
   ref: Ref<HTMLLabelElement>
 ) {
-  let internalId = useId()
-  let context = useLabelContext()
-  let providedHtmlFor = useProvidedId()
-  let providedDisabled = useDisabled()
-  let {
-    id = `headlessui-label-${internalId}`,
-    htmlFor = providedHtmlFor ?? context.props?.htmlFor,
-    passive = false,
-    ...theirProps
-  } = props
-  let labelRef = useSyncRefs(ref)
-
-  useIsoMorphicEffect(() => context.register(id), [id, context.register])
-
-  let handleClick = useEvent((e: ReactMouseEvent) => {
-    let current = e.currentTarget
-
-    // If a click happens on an interactive element inside of the label, then we
-    // don't want to trigger the label behavior and let the browser handle the
-    // click event.
-    //
-    // In a situation like:
-    //
-    // ```html
-    // <label>
-    //   I accept the
-    //   <a href="#">terms and agreement</a>
-    //   <input type="checkbox" />
-    // </label>
-    // ```
-    //
-    // Clicking on the link, should not check the checkbox, but open the link
-    // instead.
-    if (e.target !== e.currentTarget && DOM.isInteractiveElement(e.target)) {
-      return
-    }
-
-    // Labels connected to 'real' controls will already click the element. But we don't know that
-    // ahead of time. This will prevent the default click, such that only a single click happens
-    // instead of two. Otherwise this results in a visual no-op.
-    if (DOM.isHTMLLabelElement(current)) {
-      e.preventDefault()
-    }
-
-    // Ensure `onClick` from context is called
-    if (
-      context.props &&
-      'onClick' in context.props &&
-      typeof context.props.onClick === 'function'
-    ) {
-      context.props.onClick(e)
-    }
-
-    if (DOM.isHTMLLabelElement(current)) {
-      let target = document.getElementById(current.htmlFor)
-      if (target) {
-        // Bail if the target element is disabled
-        let actuallyDisabled = target.getAttribute('disabled')
-        if (actuallyDisabled === 'true' || actuallyDisabled === '') {
-          return
-        }
-
-        let ariaDisabled = target.getAttribute('aria-disabled')
-        if (ariaDisabled === 'true' || ariaDisabled === '') {
-          return
-        }
-
-        // Ensure we click the element this label is bound to. This is necessary for elements that
-        // immediately require state changes, e.g.: Radio & Checkbox inputs need to be checked (or
-        // unchecked).
-        if (
-          (DOM.isHTMLInputElement(target) &&
-            (target.type === 'file' || target.type === 'radio' || target.type === 'checkbox')) ||
-          target.role === 'radio' ||
-          target.role === 'checkbox' ||
-          target.role === 'switch'
-        ) {
-          target.click()
-        }
-
-        // Move focus to the element, this allows you to start using keyboard shortcuts since the
-        // bound element is now focused.
-        target.focus({ preventScroll: true })
-      }
-    }
-  })
-
-  let slot = useSlot({ ...context.slot, disabled: providedDisabled || false })
-
-  let ourProps = {
-    ref: labelRef,
-    ...context.props,
-    id,
-    htmlFor,
-    onClick: handleClick,
-  }
-
-  if (passive) {
-    if ('onClick' in ourProps) {
-      delete (ourProps as any)['htmlFor']
-      delete (ourProps as any)['onClick']
-    }
-
-    if ('onClick' in theirProps) {
-      delete (theirProps as any)['onClick']
-    }
-  }
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot,
-    defaultTag: htmlFor ? DEFAULT_LABEL_TAG : 'div',
-    name: context.name || 'Label',
-  })
+    throw new Error("STUB");
 }
 
 // ---

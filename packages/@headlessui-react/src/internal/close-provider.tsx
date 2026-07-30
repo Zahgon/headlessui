@@ -2,12 +2,14 @@
 
 import React, { createContext, useContext } from 'react'
 
-let CloseContext = createContext(() => {})
+let CloseContext = createContext(() => {
+    throw new Error("STUB");
+})
 
 export function useClose() {
-  return useContext(CloseContext)
+    throw new Error("STUB");
 }
 
 export function CloseProvider({ value, children }: React.PropsWithChildren<{ value: () => void }>) {
-  return <CloseContext.Provider value={value}>{children}</CloseContext.Provider>
+    throw new Error("STUB");
 }

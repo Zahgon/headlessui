@@ -12,7 +12,7 @@ function markInert(element: HTMLElement) {
   counts.set(element, count + 1)
 
   // Already marked as inert, no need to do it again
-  if (count !== 0) return () => markNotInert(element)
+  if (count !== 0) return () => { throw new Error("STUB"); }
 
   // Keep track of previous values, so that we can restore them when we are done
   originals.set(element, {
@@ -24,7 +24,7 @@ function markInert(element: HTMLElement) {
   element.setAttribute('aria-hidden', 'true')
   element.inert = true
 
-  return () => markNotInert(element)
+  return () => { throw new Error("STUB"); }
 }
 
 function markNotInert(element: HTMLElement) {
@@ -83,43 +83,6 @@ export function useInertOthers(
   let isTopLayer = useIsTopLayer(enabled, 'inert-others')
 
   useIsoMorphicEffect(() => {
-    if (!isTopLayer) return
-
-    let d = disposables()
-
-    // Mark all disallowed elements as inert
-    for (let element of disallowed?.() ?? []) {
-      if (!element) continue
-
-      d.add(markInert(element))
-    }
-
-    // Mark all siblings of allowed elements (and parents) as inert
-    let allowedElements = allowed?.() ?? []
-
-    for (let element of allowedElements) {
-      if (!element) continue
-
-      let ownerDocument = getOwnerDocument(element)
-      if (!ownerDocument) continue
-
-      let parent = element.parentElement
-      while (parent && parent !== ownerDocument.body) {
-        // Mark all siblings as inert
-        for (let node of parent.children) {
-          // If the node contains any of the elements we should not mark it as inert
-          // because it would make the elements unreachable.
-          if (allowedElements.some((el) => node.contains(el))) continue
-
-          // Mark the node as inert
-          d.add(markInert(node as HTMLElement))
-        }
-
-        // Move up the tree
-        parent = parent.parentElement
-      }
-    }
-
-    return d.dispose
+      throw new Error("STUB");
   }, [isTopLayer, allowed, disallowed])
 }

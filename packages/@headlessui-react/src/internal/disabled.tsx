@@ -3,12 +3,12 @@ import React, { createContext, useContext } from 'react'
 let DisabledContext = createContext<boolean | undefined>(undefined)
 
 export function useDisabled() {
-  return useContext(DisabledContext)
+    throw new Error("STUB");
 }
 
 export function DisabledProvider({
   value,
   children,
 }: React.PropsWithChildren<{ value?: boolean }>) {
-  return <DisabledContext.Provider value={value}>{children}</DisabledContext.Provider>
+    throw new Error("STUB");
 }

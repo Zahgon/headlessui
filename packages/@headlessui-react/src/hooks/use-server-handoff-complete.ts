@@ -20,13 +20,13 @@ function useIsHydratingInReact18(): boolean {
 
   // This weird pattern makes sure bundlers don't throw at build time
   // because `useSyncExternalStore` isn't defined in React < 18
-  const useSyncExternalStore = ((r) => r.useSyncExternalStore)(React)
+  const useSyncExternalStore = ((r) => { throw new Error("STUB"); })(React)
 
   // @ts-ignore
   let result = useSyncExternalStore(
-    () => () => {},
-    () => false,
-    () => (isServer ? false : true)
+    () => { throw new Error("STUB"); },
+    () => { throw new Error("STUB"); },
+    () => { throw new Error("STUB"); }
   )
 
   return result
@@ -45,12 +45,11 @@ export function useServerHandoffComplete() {
   }
 
   React.useEffect(() => {
-    if (complete === true) return
-    setComplete(true)
+      throw new Error("STUB");
   }, [complete])
 
   // Transition from pending to complete (forcing a re-render when server rendering)
-  React.useEffect(() => env.handoff(), [])
+  React.useEffect(() => { throw new Error("STUB"); }, [])
 
   if (isHydrating) {
     return false

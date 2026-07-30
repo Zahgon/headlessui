@@ -92,32 +92,21 @@ let reducers: {
     action: Extract<Actions, { type: P }>
   ) => StateDefinition
 } = {
-  [ActionTypes.ToggleDisclosure]: (state) => ({
-    ...state,
-    disclosureState: match(state.disclosureState, {
-      [DisclosureStates.Open]: DisclosureStates.Closed,
-      [DisclosureStates.Closed]: DisclosureStates.Open,
-    }),
-  }),
+  [ActionTypes.ToggleDisclosure]: (state) => { throw new Error("STUB"); },
   [ActionTypes.CloseDisclosure]: (state) => {
-    if (state.disclosureState === DisclosureStates.Closed) return state
-    return { ...state, disclosureState: DisclosureStates.Closed }
+      throw new Error("STUB");
   },
   [ActionTypes.SetButtonId](state, action) {
-    if (state.buttonId === action.buttonId) return state
-    return { ...state, buttonId: action.buttonId }
+      throw new Error("STUB");
   },
   [ActionTypes.SetPanelId](state, action) {
-    if (state.panelId === action.panelId) return state
-    return { ...state, panelId: action.panelId }
+      throw new Error("STUB");
   },
   [ActionTypes.SetButtonElement](state, action) {
-    if (state.buttonElement === action.element) return state
-    return { ...state, buttonElement: action.element }
+      throw new Error("STUB");
   },
   [ActionTypes.SetPanelElement](state, action) {
-    if (state.panelElement === action.element) return state
-    return { ...state, panelElement: action.element }
+      throw new Error("STUB");
   },
 }
 
@@ -140,13 +129,7 @@ let DisclosureAPIContext = createContext<{
 DisclosureAPIContext.displayName = 'DisclosureAPIContext'
 
 function useDisclosureAPIContext(component: string) {
-  let context = useContext(DisclosureAPIContext)
-  if (context === null) {
-    let err = new Error(`<${component} /> is missing a parent <Disclosure /> component.`)
-    if (Error.captureStackTrace) Error.captureStackTrace(err, useDisclosureAPIContext)
-    throw err
-  }
-  return context
+    throw new Error("STUB");
 }
 
 let DisclosurePanelContext = createContext<string | null>(null)
@@ -157,7 +140,7 @@ function useDisclosurePanelContext() {
 }
 
 function stateReducer(state: StateDefinition, action: Actions) {
-  return match(action.type, reducers, state, action)
+    throw new Error("STUB");
 }
 
 // ---
@@ -182,83 +165,7 @@ function DisclosureFn<TTag extends ElementType = typeof DEFAULT_DISCLOSURE_TAG>(
   props: DisclosureProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let { defaultOpen = false, ...theirProps } = props
-  let internalDisclosureRef = useRef<HTMLElement | null>(null)
-  let disclosureRef = useSyncRefs(
-    ref,
-    optionalRef(
-      (ref) => {
-        internalDisclosureRef.current = ref
-      },
-      props.as === undefined || isFragment(props.as)
-    )
-  )
-
-  let reducerBag = useReducer(stateReducer, {
-    disclosureState: defaultOpen ? DisclosureStates.Open : DisclosureStates.Closed,
-    buttonElement: null,
-    panelElement: null,
-    buttonId: null,
-    panelId: null,
-  } as StateDefinition)
-  let [{ disclosureState, buttonId }, dispatch] = reducerBag
-
-  let close = useEvent(
-    (focusableElement?: HTMLOrSVGElement | MutableRefObject<HTMLOrSVGElement | null>) => {
-      dispatch({ type: ActionTypes.CloseDisclosure })
-      let ownerDocument = getOwnerDocument(internalDisclosureRef.current)
-      if (!ownerDocument) return
-      if (!buttonId) return
-
-      let restoreElement = (() => {
-        if (!focusableElement) return ownerDocument.getElementById(buttonId)
-        if (DOM.isHTMLorSVGElement(focusableElement)) return focusableElement
-        if ('current' in focusableElement && DOM.isHTMLorSVGElement(focusableElement.current)) {
-          return focusableElement.current
-        }
-
-        return ownerDocument.getElementById(buttonId)
-      })()
-
-      restoreElement?.focus()
-    }
-  )
-
-  let api = useMemo<ContextType<typeof DisclosureAPIContext>>(() => ({ close }), [close])
-
-  let slot = useSlot<DisclosureRenderPropArg>({
-    open: disclosureState === DisclosureStates.Open,
-    close,
-  })
-
-  let ourProps = {
-    ref: disclosureRef,
-  }
-
-  let render = useRender()
-
-  return (
-    <DisclosureContext.Provider value={reducerBag}>
-      <DisclosureAPIContext.Provider value={api}>
-        <CloseProvider value={close}>
-          <OpenClosedProvider
-            value={match(disclosureState, {
-              [DisclosureStates.Open]: State.Open,
-              [DisclosureStates.Closed]: State.Closed,
-            })}
-          >
-            {render({
-              ourProps,
-              theirProps,
-              slot,
-              defaultTag: DEFAULT_DISCLOSURE_TAG,
-              name: 'Disclosure',
-            })}
-          </OpenClosedProvider>
-        </CloseProvider>
-      </DisclosureAPIContext.Provider>
-    </DisclosureContext.Provider>
-  )
+    throw new Error("STUB");
 }
 
 // ---
@@ -288,139 +195,7 @@ function ButtonFn<TTag extends ElementType = typeof DEFAULT_BUTTON_TAG>(
   props: DisclosureButtonProps<TTag>,
   ref: Ref<HTMLButtonElement>
 ) {
-  let internalId = useId()
-  let {
-    id = `headlessui-disclosure-button-${internalId}`,
-    disabled = false,
-    autoFocus = false,
-    ...theirProps
-  } = props
-  let [state, dispatch] = useDisclosureContext('Disclosure.Button')
-  let panelContext = useDisclosurePanelContext()
-  let isWithinPanel = panelContext === null ? false : panelContext === state.panelId
-
-  let internalButtonRef = useRef<HTMLButtonElement | null>(null)
-  let buttonRef = useSyncRefs(
-    internalButtonRef,
-    ref,
-    useEvent((element) => {
-      if (isWithinPanel) return
-      return dispatch({ type: ActionTypes.SetButtonElement, element })
-    })
-  )
-
-  useEffect(() => {
-    if (isWithinPanel) return
-
-    dispatch({ type: ActionTypes.SetButtonId, buttonId: id })
-    return () => {
-      dispatch({ type: ActionTypes.SetButtonId, buttonId: null })
-    }
-  }, [id, dispatch, isWithinPanel])
-
-  let handleKeyDown = useEvent((event: ReactKeyboardEvent<HTMLButtonElement>) => {
-    if (isWithinPanel) {
-      if (state.disclosureState === DisclosureStates.Closed) return
-
-      switch (event.key) {
-        case Keys.Space:
-        case Keys.Enter:
-          event.preventDefault()
-          event.stopPropagation()
-          dispatch({ type: ActionTypes.ToggleDisclosure })
-          state.buttonElement?.focus()
-          break
-      }
-    } else {
-      switch (event.key) {
-        case Keys.Space:
-        case Keys.Enter:
-          event.preventDefault()
-          event.stopPropagation()
-          dispatch({ type: ActionTypes.ToggleDisclosure })
-          break
-      }
-    }
-  })
-
-  let handleKeyUp = useEvent((event: ReactKeyboardEvent<HTMLButtonElement>) => {
-    switch (event.key) {
-      case Keys.Space:
-        // Required for firefox, event.preventDefault() in handleKeyDown for
-        // the Space key doesn't cancel the handleKeyUp, which in turn
-        // triggers a *click*.
-        event.preventDefault()
-        break
-    }
-  })
-
-  let handleClick = useEvent((event: ReactMouseEvent) => {
-    if (isDisabledReactIssue7711(event.currentTarget)) return
-    if (disabled) return
-
-    if (isWithinPanel) {
-      dispatch({ type: ActionTypes.ToggleDisclosure })
-      state.buttonElement?.focus()
-    } else {
-      dispatch({ type: ActionTypes.ToggleDisclosure })
-    }
-  })
-
-  let { isFocusVisible: focus, focusProps } = useFocusRing({ autoFocus })
-  let { isHovered: hover, hoverProps } = useHover({ isDisabled: disabled })
-  let { pressed: active, pressProps } = useActivePress({ disabled })
-
-  let slot = useSlot<ButtonRenderPropArg>({
-    open: state.disclosureState === DisclosureStates.Open,
-    hover,
-    active,
-    disabled,
-    focus,
-    autofocus: autoFocus,
-  })
-
-  let type = useResolveButtonType(props, state.buttonElement)
-  let ourProps = isWithinPanel
-    ? mergeProps(
-        {
-          ref: buttonRef,
-          type,
-          disabled: disabled || undefined,
-          autoFocus,
-          onKeyDown: handleKeyDown,
-          onClick: handleClick,
-        },
-        focusProps,
-        hoverProps,
-        pressProps
-      )
-    : mergeProps(
-        {
-          ref: buttonRef,
-          id,
-          type,
-          'aria-expanded': state.disclosureState === DisclosureStates.Open,
-          'aria-controls': state.panelElement ? state.panelId : undefined,
-          disabled: disabled || undefined,
-          autoFocus,
-          onKeyDown: handleKeyDown,
-          onKeyUp: handleKeyUp,
-          onClick: handleClick,
-        },
-        focusProps,
-        hoverProps,
-        pressProps
-      )
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot,
-    defaultTag: DEFAULT_BUTTON_TAG,
-    name: 'Disclosure.Button',
-  })
+    throw new Error("STUB");
 }
 
 // ---
@@ -445,73 +220,7 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
   props: DisclosurePanelProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let internalId = useId()
-  let {
-    id = `headlessui-disclosure-panel-${internalId}`,
-    transition = false,
-    ...theirProps
-  } = props
-  let [state, dispatch] = useDisclosureContext('Disclosure.Panel')
-  let { close } = useDisclosureAPIContext('Disclosure.Panel')
-
-  // To improve the correctness of transitions (timing related race conditions),
-  // we track the element locally to this component, instead of relying on the
-  // context value. This way, the component can re-render independently of the
-  // parent component when the `useTransition(…)` hook performs a state change.
-  let [localPanelElement, setLocalPanelElement] = useState<HTMLElement | null>(null)
-
-  let panelRef = useSyncRefs(
-    ref,
-    useEvent((element) => {
-      startTransition(() => dispatch({ type: ActionTypes.SetPanelElement, element }))
-    }),
-    setLocalPanelElement
-  )
-
-  useEffect(() => {
-    dispatch({ type: ActionTypes.SetPanelId, panelId: id })
-    return () => {
-      dispatch({ type: ActionTypes.SetPanelId, panelId: null })
-    }
-  }, [id, dispatch])
-
-  let usesOpenClosedState = useOpenClosed()
-  let [visible, transitionData] = useTransition(
-    transition,
-    localPanelElement,
-    usesOpenClosedState !== null
-      ? (usesOpenClosedState & State.Open) === State.Open
-      : state.disclosureState === DisclosureStates.Open
-  )
-
-  let slot = useSlot<PanelRenderPropArg>({
-    open: state.disclosureState === DisclosureStates.Open,
-    close,
-  })
-
-  let ourProps = {
-    ref: panelRef,
-    id,
-    ...transitionDataAttributes(transitionData),
-  }
-
-  let render = useRender()
-
-  return (
-    <ResetOpenClosedProvider>
-      <DisclosurePanelContext.Provider value={state.panelId}>
-        {render({
-          ourProps,
-          theirProps,
-          slot,
-          defaultTag: DEFAULT_PANEL_TAG,
-          features: PanelRenderFeatures,
-          visible,
-          name: 'Disclosure.Panel',
-        })}
-      </DisclosurePanelContext.Provider>
-    </ResetOpenClosedProvider>
-  )
+    throw new Error("STUB");
 }
 
 // ---

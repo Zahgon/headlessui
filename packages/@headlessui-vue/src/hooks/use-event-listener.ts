@@ -10,9 +10,6 @@ export function useEventListener<TType extends keyof WindowEventMap>(
   if (env.isServer) return
 
   watchEffect((onInvalidate) => {
-    element = element ?? window
-
-    element.addEventListener(type, listener as any, options)
-    onInvalidate(() => element!.removeEventListener(type, listener as any, options))
+      throw new Error("STUB");
   })
 }

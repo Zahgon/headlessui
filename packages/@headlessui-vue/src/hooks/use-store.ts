@@ -6,7 +6,7 @@ export function useStore<T>(store: Store<T, any>) {
 
   onUnmounted(
     store.subscribe(() => {
-      state.value = store.getSnapshot()
+        throw new Error("STUB");
     })
   )
 

@@ -3,21 +3,12 @@ import { useIsoMorphicEffect } from './use-iso-morphic-effect'
 
 export function useIsTouchDevice() {
   let [mq] = useState(() =>
-    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-      ? window.matchMedia('(pointer: coarse)')
-      : null
+    { throw new Error("STUB"); }
   )
   let [isTouchDevice, setIsTouchDevice] = useState(mq?.matches ?? false)
 
   useIsoMorphicEffect(() => {
-    if (!mq) return
-
-    function handle(event: MediaQueryListEvent) {
-      setIsTouchDevice(event.matches)
-    }
-
-    mq.addEventListener('change', handle)
-    return () => mq!.removeEventListener('change', handle)
+      throw new Error("STUB");
   }, [mq])
 
   return isTouchDevice

@@ -16,34 +16,10 @@ export function useOnDisappear(
   cb: () => void
 ) {
   let listenerRef = useLatestValue((element: HTMLElement) => {
-    let rect = element.getBoundingClientRect()
-    if (rect.x === 0 && rect.y === 0 && rect.width === 0 && rect.height === 0) {
-      cb()
-    }
+      throw new Error("STUB");
   })
 
   useEffect(() => {
-    if (!enabled) return
-
-    let element = ref === null ? null : DOM.isHTMLElement(ref) ? ref : ref.current
-    if (!element) return
-
-    let d = disposables()
-
-    // Try using ResizeObserver
-    if (typeof ResizeObserver !== 'undefined') {
-      let observer = new ResizeObserver(() => listenerRef.current(element!))
-      observer.observe(element)
-      d.add(() => observer.disconnect())
-    }
-
-    // Try using IntersectionObserver
-    if (typeof IntersectionObserver !== 'undefined') {
-      let observer = new IntersectionObserver(() => listenerRef.current(element!))
-      observer.observe(element)
-      d.add(() => observer.disconnect())
-    }
-
-    return () => d.dispose()
+      throw new Error("STUB");
   }, [ref, listenerRef, enabled])
 }

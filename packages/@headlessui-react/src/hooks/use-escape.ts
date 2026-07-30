@@ -10,10 +10,6 @@ export function useEscape(
   let isTopLayer = useIsTopLayer(enabled, 'escape')
 
   useEventListener(view, 'keydown', (event) => {
-    if (!isTopLayer) return
-    if (event.defaultPrevented) return
-    if (event.key !== Keys.Escape) return
-
-    cb(event)
+      throw new Error("STUB");
   })
 }

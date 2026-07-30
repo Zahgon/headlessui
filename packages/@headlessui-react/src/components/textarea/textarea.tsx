@@ -44,54 +44,7 @@ function TextareaFn<TTag extends ElementType = typeof DEFAULT_TEXTAREA_TAG>(
   props: TextareaProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let internalId = useId()
-  let providedId = useProvidedId()
-  let providedDisabled = useDisabled()
-  let {
-    id = providedId || `headlessui-textarea-${internalId}`,
-    disabled = providedDisabled || false,
-    autoFocus = false,
-    invalid = false,
-    ...theirProps
-  } = props
-
-  let labelledBy = useLabelledBy()
-  let describedBy = useDescribedBy()
-
-  let { isFocused: focus, focusProps } = useFocusRing({ autoFocus })
-  let { isHovered: hover, hoverProps } = useHover({ isDisabled: disabled })
-
-  let ourProps = mergeProps(
-    {
-      ref,
-      id,
-      'aria-labelledby': labelledBy,
-      'aria-describedby': describedBy,
-      'aria-invalid': invalid ? 'true' : undefined,
-      disabled: disabled || undefined,
-      autoFocus,
-    },
-    focusProps,
-    hoverProps
-  )
-
-  let slot = useSlot<TextareaRenderPropArg>({
-    disabled,
-    invalid,
-    hover,
-    focus,
-    autofocus: autoFocus,
-  })
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot,
-    defaultTag: DEFAULT_TEXTAREA_TAG,
-    name: 'Textarea',
-  })
+    throw new Error("STUB");
 }
 
 export interface _internal_ComponentTextarea extends HasDisplayName {

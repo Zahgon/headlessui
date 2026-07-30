@@ -2,7 +2,7 @@ import { disposables } from './disposables'
 
 export const ElementPositionState = {
   Idle: { kind: 'Idle' as const },
-  Tracked: (position: string) => ({ kind: 'Tracked' as const, position }),
+  Tracked: (position: string) => { throw new Error("STUB"); },
   Moved: { kind: 'Moved' as const },
 }
 
@@ -22,25 +22,5 @@ export function detectMovement(
   state: ResolvedStates<typeof ElementPositionState>,
   onMove: () => void
 ) {
-  let d = disposables()
-
-  if (state.kind === 'Tracked') {
-    let { position } = state
-
-    function check() {
-      if (position !== computeVisualPosition(target)) {
-        d.dispose()
-        onMove()
-      }
-    }
-
-    let observer = new ResizeObserver(check)
-    observer.observe(target)
-    d.add(() => observer.disconnect())
-
-    d.addEventListener(window, 'scroll', check, { passive: true })
-    d.addEventListener(window, 'resize', check)
-  }
-
-  return () => d.dispose()
+    throw new Error("STUB");
 }

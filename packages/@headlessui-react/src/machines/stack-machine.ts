@@ -20,32 +20,10 @@ let reducers: {
   [P in ActionTypes]: (state: State, action: Extract<Actions, { type: P }>) => State
 } = {
   [ActionTypes.Push](state, action) {
-    let id = action.id
-    let stack = state.stack
-    let idx = state.stack.indexOf(id)
-
-    // Already in the stack, move it to the top
-    if (idx !== -1) {
-      let copy = state.stack.slice()
-      copy.splice(idx, 1)
-      copy.push(id)
-
-      stack = copy
-      return { ...state, stack }
-    }
-
-    // Not in the stack, add it to the top
-    return { ...state, stack: [...state.stack, id] }
-  },
+        throw new Error("STUB");
+    },
   [ActionTypes.Pop](state, action) {
-    let id = action.id
-    let idx = state.stack.indexOf(id)
-    if (idx === -1) return state // Not in the stack
-
-    let copy = state.stack.slice()
-    copy.splice(idx, 1)
-
-    return { ...state, stack: copy }
+      throw new Error("STUB");
   },
 }
 
@@ -55,18 +33,18 @@ class StackMachine extends Machine<State, Actions> {
   }
 
   reduce(state: Readonly<State>, action: Actions): State {
-    return match(action.type, reducers, state, action)
+      throw new Error("STUB");
   }
 
   actions = {
-    push: (id: Id) => this.send({ type: ActionTypes.Push, id }),
-    pop: (id: Id) => this.send({ type: ActionTypes.Pop, id }),
+    push: (id: Id) => { throw new Error("STUB"); },
+    pop: (id: Id) => { throw new Error("STUB"); },
   }
 
   selectors = {
-    isTop: (state: State, id: Id) => state.stack[state.stack.length - 1] === id,
-    inStack: (state: State, id: Id) => state.stack.includes(id),
+    isTop: (state: State, id: Id) => { throw new Error("STUB"); },
+    inStack: (state: State, id: Id) => { throw new Error("STUB"); },
   }
 }
 
-export const stackMachines = new DefaultMap<Scope, StackMachine>(() => StackMachine.new())
+export const stackMachines = new DefaultMap<Scope, StackMachine>(() => { throw new Error("STUB"); })

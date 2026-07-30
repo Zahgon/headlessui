@@ -10,13 +10,6 @@ export function useEventListener<TType extends keyof WindowEventMap>(
   let listenerRef = useLatestValue(listener)
 
   useEffect(() => {
-    element = element ?? window
-
-    function handler(event: WindowEventMap[TType]) {
-      listenerRef.current(event)
-    }
-
-    element.addEventListener(type, handler as any, options)
-    return () => element!.removeEventListener(type, handler as any, options)
+      throw new Error("STUB");
   }, [element, type, options])
 }

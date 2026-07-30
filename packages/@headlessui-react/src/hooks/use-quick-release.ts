@@ -13,7 +13,7 @@ export const Action = {
   Ignore: { kind: ActionKind.Ignore } as const,
 
   /** Select the current item */
-  Select: (target: HTMLElement) => ({ kind: ActionKind.Select, target }) as const,
+  Select: (target: HTMLElement) => { throw new Error("STUB"); },
 
   /** Close the dropdown */
   Close: { kind: ActionKind.Close } as const,
@@ -55,60 +55,5 @@ export function useQuickRelease(
     select: (target: HTMLElement) => void
   }
 ) {
-  // Capture the timestamp of when the `pointerdown` event happened on the
-  // trigger.
-  let triggeredAtRef = useRef<number | null>(null)
-  let startXRef = useRef<number | null>(null)
-  let startYRef = useRef<number | null>(null)
-  useDocumentEvent(enabled && trigger !== null, 'pointerdown', (e) => {
-    if (!DOM.isNode(e?.target)) return
-    if (!trigger?.contains(e.target)) return
-
-    startXRef.current = e.x
-    startYRef.current = e.y
-
-    triggeredAtRef.current = e.timeStamp
-  })
-
-  useDocumentEvent(
-    enabled && trigger !== null,
-    'pointerup',
-    (e) => {
-      let triggeredAt = triggeredAtRef.current
-      if (triggeredAt === null) return
-      triggeredAtRef.current = null
-
-      if (!DOM.isHTMLorSVGElement(e.target)) return
-
-      // Ensure we moved the pointer a bit before considering it a quick
-      // release.
-      if (
-        Math.abs(e.x - (startXRef.current ?? e.x)) < POINTER_MOVEMENT_THRESHOLD &&
-        Math.abs(e.y - (startYRef.current ?? e.y)) < POINTER_MOVEMENT_THRESHOLD
-      ) {
-        return
-      }
-
-      let result = action(e as PointerEventWithTarget)
-
-      switch (result.kind) {
-        case ActionKind.Ignore:
-          return
-
-        case ActionKind.Select: {
-          if (e.timeStamp - triggeredAt > POINTER_HOLD_THRESHOLD) {
-            select(result.target)
-            close()
-          }
-          break
-        }
-
-        case ActionKind.Close: {
-          close()
-          break
-        }
-      }
-    },
-    { capture: true }
-  )
+    throw new Error("STUB");
 }

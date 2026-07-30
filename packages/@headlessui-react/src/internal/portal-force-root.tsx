@@ -12,9 +12,5 @@ interface ForcePortalRootProps {
 }
 
 export function ForcePortalRoot(props: ForcePortalRootProps) {
-  return (
-    <ForcePortalRootContext.Provider value={props.force}>
-      {props.children}
-    </ForcePortalRootContext.Provider>
-  )
+    throw new Error("STUB");
 }

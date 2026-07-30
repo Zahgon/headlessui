@@ -29,50 +29,7 @@ function FieldFn<TTag extends ElementType = typeof DEFAULT_FIELD_TAG>(
   props: FieldProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let inputId = `headlessui-control-${useId()}`
-
-  let [labelledby, LabelProvider] = useLabels()
-  let [describedBy, DescriptionProvider] = useDescriptions()
-
-  let providedDisabled = useDisabled()
-  let { disabled = providedDisabled || false, ...theirProps } = props
-
-  let slot = useSlot<FieldRenderPropArg>({ disabled })
-
-  let ourProps = {
-    ref,
-    disabled: disabled || undefined,
-    'aria-disabled': disabled || undefined,
-  }
-
-  let render = useRender()
-
-  return (
-    <DisabledProvider value={disabled}>
-      <LabelProvider value={labelledby}>
-        <DescriptionProvider value={describedBy}>
-          <IdProvider id={inputId}>
-            {render({
-              ourProps,
-              theirProps: {
-                ...theirProps,
-                children: (
-                  <FormFieldsProvider>
-                    {typeof theirProps.children === 'function'
-                      ? theirProps.children(slot)
-                      : theirProps.children}
-                  </FormFieldsProvider>
-                ),
-              },
-              slot,
-              defaultTag: DEFAULT_FIELD_TAG,
-              name: 'Field',
-            })}
-          </IdProvider>
-        </DescriptionProvider>
-      </LabelProvider>
-    </DisabledProvider>
-  )
+    throw new Error("STUB");
 }
 
 export interface _internal_ComponentField extends HasDisplayName {

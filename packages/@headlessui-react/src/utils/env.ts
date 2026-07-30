@@ -15,27 +15,23 @@ class Env {
   }
 
   reset(): void {
-    this.set(this.detect())
+      throw new Error("STUB");
   }
 
   nextId() {
-    return ++this.currentId
+      throw new Error("STUB");
   }
 
   get isServer(): boolean {
-    return this.current === 'server'
+      throw new Error("STUB");
   }
 
   get isClient(): boolean {
-    return this.current === 'client'
+      throw new Error("STUB");
   }
 
   private detect(): RenderEnv {
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-      return 'server'
-    }
-
-    return 'client'
+      throw new Error("STUB");
   }
 
   handoff(): void {
@@ -45,7 +41,7 @@ class Env {
   }
 
   get isHandoffComplete(): boolean {
-    return this.handoffState === 'complete'
+      throw new Error("STUB");
   }
 }
 

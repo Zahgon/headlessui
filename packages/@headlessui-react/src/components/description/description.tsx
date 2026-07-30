@@ -44,7 +44,7 @@ function useDescriptionContext() {
 }
 
 export function useDescribedBy() {
-  return useContext(DescriptionContext)?.value ?? undefined
+    throw new Error("STUB");
 }
 
 interface DescriptionProviderProps extends SharedData {
@@ -64,37 +64,7 @@ export function useDescriptions(): [
 
     // The provider component
     useMemo(() => {
-      return function DescriptionProvider(props: DescriptionProviderProps) {
-        let register = useEvent((value: string) => {
-          setDescriptionIds((existing) => [...existing, value])
-
-          return () => {
-            return setDescriptionIds((existing) => {
-              let clone = existing.slice()
-              let idx = clone.indexOf(value)
-              if (idx !== -1) clone.splice(idx, 1)
-              return clone
-            })
-          }
-        })
-
-        let contextBag = useMemo(
-          () => ({
-            register,
-            slot: props.slot,
-            name: props.name,
-            props: props.props,
-            value: props.value,
-          }),
-          [register, props.slot, props.name, props.props, props.value]
-        )
-
-        return (
-          <DescriptionContext.Provider value={contextBag}>
-            {props.children}
-          </DescriptionContext.Provider>
-        )
-      }
+        throw new Error("STUB");
     }, [setDescriptionIds]),
   ]
 }
@@ -110,26 +80,7 @@ function DescriptionFn<TTag extends ElementType = typeof DEFAULT_DESCRIPTION_TAG
   props: DescriptionProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let internalId = useId()
-  let providedDisabled = useDisabled()
-  let { id = `headlessui-description-${internalId}`, ...theirProps } = props
-  let context = useDescriptionContext()
-  let descriptionRef = useSyncRefs(ref)
-
-  useIsoMorphicEffect(() => context.register(id), [id, context.register])
-
-  let slot = useSlot({ ...context.slot, disabled: providedDisabled || false })
-  let ourProps = { ref: descriptionRef, ...context.props, id }
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot,
-    defaultTag: DEFAULT_DESCRIPTION_TAG,
-    name: context.name || 'Description',
-  })
+    throw new Error("STUB");
 }
 
 // ---

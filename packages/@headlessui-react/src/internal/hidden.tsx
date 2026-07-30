@@ -28,42 +28,7 @@ function VisuallyHidden<TTag extends ElementType = typeof DEFAULT_VISUALLY_HIDDE
   props: HiddenProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let { features = HiddenFeatures.None, ...theirProps } = props
-  let ourProps = {
-    ref,
-    'aria-hidden':
-      (features & HiddenFeatures.Focusable) === HiddenFeatures.Focusable
-        ? true
-        : theirProps['aria-hidden'] ?? undefined,
-    hidden: (features & HiddenFeatures.Hidden) === HiddenFeatures.Hidden ? true : undefined,
-    style: {
-      position: 'fixed',
-      top: 1,
-      left: 1,
-      width: 1,
-      height: 0,
-      padding: 0,
-      margin: -1,
-      overflow: 'hidden',
-      clip: 'rect(0, 0, 0, 0)',
-      whiteSpace: 'nowrap',
-      borderWidth: '0',
-      ...((features & HiddenFeatures.Hidden) === HiddenFeatures.Hidden &&
-        !((features & HiddenFeatures.Focusable) === HiddenFeatures.Focusable) && {
-          display: 'none',
-        }),
-    },
-  }
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot: {},
-    defaultTag: DEFAULT_VISUALLY_HIDDEN_TAG,
-    name: 'Hidden',
-  })
+    throw new Error("STUB");
 }
 
 interface ComponentHidden extends HasDisplayName {

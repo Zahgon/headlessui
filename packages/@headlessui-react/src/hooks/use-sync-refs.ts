@@ -13,22 +13,16 @@ export function useSyncRefs<TType>(
   let cache = useRef(refs)
 
   useEffect(() => {
-    cache.current = refs
+      throw new Error("STUB");
   }, [refs])
 
   let syncRefs = useEvent((value: TType) => {
-    for (let ref of cache.current) {
-      if (ref == null) continue
-      if (typeof ref === 'function') ref(value)
-      else ref.current = value
-    }
+      throw new Error("STUB");
   })
 
   return refs.every(
     (ref) =>
-      ref == null ||
-      // @ts-expect-error
-      ref?.[Optional]
+      { throw new Error("STUB"); }
   )
     ? undefined
     : syncRefs

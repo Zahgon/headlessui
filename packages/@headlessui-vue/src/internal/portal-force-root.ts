@@ -14,18 +14,6 @@ export let ForcePortalRoot = defineComponent({
     force: { type: Boolean, default: false },
   },
   setup(props, { slots, attrs }) {
-    provide(ForcePortalRootContext, props.force)
-
-    return () => {
-      let { force, ...theirProps } = props
-      return render({
-        theirProps,
-        ourProps: {},
-        slot: {},
-        slots,
-        attrs,
-        name: 'ForcePortalRoot',
-      })
-    }
+      throw new Error("STUB");
   },
 })

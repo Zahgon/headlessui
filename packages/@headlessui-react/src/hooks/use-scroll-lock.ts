@@ -4,11 +4,9 @@ import { useIsTopLayer } from './use-is-top-layer'
 export function useScrollLock(
   enabled: boolean,
   ownerDocument: Document | null,
-  resolveAllowedContainers: () => Element[] = () => [document.body]
+  resolveAllowedContainers: () => Element[] = () => { throw new Error("STUB"); }
 ) {
   let isTopLayer = useIsTopLayer(enabled, 'scroll-lock')
 
-  useDocumentOverflowLockedEffect(isTopLayer, ownerDocument, (meta) => ({
-    containers: [...(meta.containers ?? []), resolveAllowedContainers],
-  }))
+  useDocumentOverflowLockedEffect(isTopLayer, ownerDocument, (meta) => { throw new Error("STUB"); })
 }

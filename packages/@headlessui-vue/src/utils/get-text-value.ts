@@ -58,18 +58,7 @@ export function getTextValue(element: HTMLElement): string {
     let labels = labelledby
       .split(' ')
       .map((labelledby) => {
-        let labelEl = document.getElementById(labelledby)
-        if (labelEl) {
-          let label = labelEl.getAttribute('aria-label')
-          // Try to use the `aria-label` first (of the referenced element)
-          if (typeof label === 'string') return label.trim()
-
-          // This time, the `aria-labelledby` isn't used anymore (in Safari), so we just have to
-          // look at the contents itself.
-          return getTextContents(labelEl).trim()
-        }
-
-        return null
+          throw new Error("STUB");
       })
       .filter(Boolean)
 

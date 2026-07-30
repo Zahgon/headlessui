@@ -9,30 +9,13 @@ export function useDocumentOverflowLockedEffect(
 ) {
   let store = useStore(overflows)
   let locked = computed(() => {
-    let entry = doc.value ? store.value.get(doc.value) : undefined
-    return entry ? entry.count > 0 : false
+      throw new Error("STUB");
   })
 
   watch(
     [doc, shouldBeLocked],
     ([doc, shouldBeLocked], [oldDoc], onInvalidate) => {
-      if (!doc || !shouldBeLocked) {
-        return
-      }
-
-      // Prevent the document from scrolling
-      overflows.dispatch('PUSH', doc, meta)
-
-      // Allow document to scroll
-      let didRunCleanup = false
-      onInvalidate(() => {
-        if (didRunCleanup) return
-        overflows.dispatch('POP', oldDoc ?? doc, meta)
-
-        // This shouldn't be necessary, but it is.
-        // Seems like a Vue bug.
-        didRunCleanup = true
-      })
+        throw new Error("STUB");
     },
     {
       immediate: true,

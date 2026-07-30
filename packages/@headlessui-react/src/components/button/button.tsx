@@ -41,36 +41,7 @@ function ButtonFn<TTag extends ElementType = typeof DEFAULT_BUTTON_TAG>(
   props: ButtonProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let providedDisabled = useDisabled()
-  let { disabled = providedDisabled || false, autoFocus = false, ...theirProps } = props
-
-  let { isFocusVisible: focus, focusProps } = useFocusRing({ autoFocus })
-  let { isHovered: hover, hoverProps } = useHover({ isDisabled: disabled })
-  let { pressed: active, pressProps } = useActivePress({ disabled })
-
-  let ourProps = mergeProps(
-    {
-      ref,
-      type: theirProps.type ?? 'button',
-      disabled: disabled || undefined,
-      autoFocus,
-    },
-    focusProps,
-    hoverProps,
-    pressProps
-  )
-
-  let slot = useSlot<ButtonRenderPropArg>({ disabled, hover, focus, active, autofocus: autoFocus })
-
-  let render = useRender()
-
-  return render({
-    ourProps,
-    theirProps,
-    slot,
-    defaultTag: DEFAULT_BUTTON_TAG,
-    name: 'Button',
-  })
+    throw new Error("STUB");
 }
 
 export interface _internal_ComponentButton extends HasDisplayName {

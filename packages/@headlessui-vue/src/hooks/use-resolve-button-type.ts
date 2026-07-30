@@ -17,16 +17,11 @@ export function useResolveButtonType(
   let type = ref(resolveType(data.value.type, data.value.as))
 
   onMounted(() => {
-    type.value = resolveType(data.value.type, data.value.as)
+      throw new Error("STUB");
   })
 
   watchEffect(() => {
-    if (type.value) return
-    if (!dom(refElement)) return
-
-    if (dom(refElement) instanceof HTMLButtonElement && !dom(refElement)?.hasAttribute('type')) {
-      type.value = 'button'
-    }
+      throw new Error("STUB");
   })
 
   return type

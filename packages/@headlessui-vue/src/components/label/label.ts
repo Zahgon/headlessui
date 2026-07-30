@@ -46,16 +46,14 @@ export function useLabels({
     labelIds.value.push(value)
 
     return () => {
-      let idx = labelIds.value.indexOf(value)
-      if (idx === -1) return
-      labelIds.value.splice(idx, 1)
+        throw new Error("STUB");
     }
   }
 
   provide(LabelContext, { register, slot, name, props })
 
   // The actual id's as string or undefined.
-  return computed(() => (labelIds.value.length > 0 ? labelIds.value.join(' ') : undefined))
+  return computed(() => { throw new Error("STUB"); })
 }
 
 // ---
@@ -65,46 +63,9 @@ export let Label = defineComponent({
   props: {
     as: { type: [Object, String], default: 'label' },
     passive: { type: [Boolean], default: false },
-    id: { type: String, default: () => `headlessui-label-${useId()}` },
+    id: { type: String, default: () => { throw new Error("STUB"); } },
   },
   setup(myProps, { slots, attrs }) {
-    let context = useLabelContext()
-
-    onMounted(() => onUnmounted(context.register(myProps.id)))
-
-    return () => {
-      let { name = 'Label', slot = {}, props = {} } = context
-      let { id, passive, ...theirProps } = myProps
-      let ourProps = {
-        ...Object.entries(props).reduce(
-          (acc, [key, value]) => Object.assign(acc, { [key]: unref(value) }),
-          {}
-        ),
-        id,
-      }
-
-      if (passive) {
-        // @ts-expect-error props are dynamic via context, some components will provide an onClick
-        // then we can delete it.
-        delete ourProps['onClick']
-
-        // @ts-expect-error props are dynamic via context, some components will provide an htmlFor
-        // then we can delete it.
-        delete ourProps['htmlFor']
-
-        // @ts-expect-error props are dynamic via context, some components will provide an onClick
-        // then we can delete it.
-        delete theirProps['onClick']
-      }
-
-      return render({
-        ourProps,
-        theirProps,
-        slot,
-        attrs,
-        slots,
-        name,
-      })
-    }
+      throw new Error("STUB");
   },
 })

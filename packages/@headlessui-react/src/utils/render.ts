@@ -61,7 +61,7 @@ export function useRender() {
   let mergeRefs = useMergeRefsFn()
 
   return useCallback(
-    (args: Parameters<typeof render>[0]) => render({ mergeRefs, ...args }),
+    (args: Parameters<typeof render>[0]) => { throw new Error("STUB"); },
     [mergeRefs]
   ) as typeof render
 }
@@ -109,16 +109,10 @@ function render<TFeature extends RenderFeatures, TTag extends ElementType, TSlot
 
     return match(strategy, {
       [RenderStrategy.Unmount]() {
-        return null
-      },
+            throw new Error("STUB");
+        },
       [RenderStrategy.Hidden]() {
-        return _render(
-          { ...rest, ...{ hidden: true, style: { display: 'none' } } },
-          slot,
-          defaultTag,
-          name,
-          mergeRefs!
-        )
+          throw new Error("STUB");
       },
     })
   }
@@ -174,7 +168,7 @@ function _render<TTag extends ElementType, TSlot>(
       }
 
       if (v === true) {
-        states.push(k.replace(/([A-Z])/g, (m) => `-${m.toLowerCase()}`))
+        states.push(k.replace(/([A-Z])/g, (m) => { throw new Error("STUB"); }))
       }
     }
 
@@ -202,7 +196,7 @@ function _render<TTag extends ElementType, TSlot>(
               `However we need to passthrough the following props:`,
               Object.keys(compact(rest))
                 .concat(Object.keys(compact(dataAttributes)))
-                .map((line) => `  - ${line}`)
+                .map((line) => { throw new Error("STUB"); })
                 .join('\n'),
               '',
               'You can apply a few solutions:',
@@ -210,7 +204,7 @@ function _render<TTag extends ElementType, TSlot>(
                 'Add an `as="..."` prop, to ensure that we render an actual element instead of a "Fragment".',
                 'Render a single element as the child so that we can forward the props onto that element.',
               ]
-                .map((line) => `  - ${line}`)
+                .map((line) => { throw new Error("STUB"); })
                 .join('\n'),
             ].join('\n')
           )
@@ -224,10 +218,7 @@ function _render<TTag extends ElementType, TSlot>(
         let newClassName =
           typeof childPropsClassName === 'function'
             ? (...args: any[]) =>
-                classNames(
-                  (childPropsClassName as Function)(...args),
-                  (rest as { className?: string }).className
-                )
+                { throw new Error("STUB"); }
             : classNames(childPropsClassName, (rest as { className?: string }).className)
 
         let classNameProps = newClassName ? { className: newClassName } : {}
@@ -300,20 +291,11 @@ function useMergeRefsFn() {
   type MaybeRef<T> = MutableRefObject<T> | ((value: T) => void) | null | undefined
   let currentRefs = useRef<MaybeRef<any>[]>([])
   let mergedRef = useCallback((value: any) => {
-    for (let ref of currentRefs.current) {
-      if (ref == null) continue
-      if (typeof ref === 'function') ref(value)
-      else ref.current = value
-    }
+      throw new Error("STUB");
   }, [])
 
   return (...refs: any[]) => {
-    if (refs.every((ref) => ref == null)) {
-      return undefined
-    }
-
-    currentRefs.current = refs
-    return mergedRef
+      throw new Error("STUB");
   }
 }
 
@@ -323,15 +305,7 @@ function useMergeRefsFn() {
 // which then causes the child to re-render resulting in a render loop
 // TODO: Add tests for this somehow
 function defaultMergeRefs(...refs: any[]) {
-  return refs.every((ref) => ref == null)
-    ? undefined
-    : (value: any) => {
-        for (let ref of refs) {
-          if (ref == null) continue
-          if (typeof ref === 'function') ref(value)
-          else ref.current = value
-        }
-      }
+    throw new Error("STUB");
 }
 
 // A more complex example fo the `mergeProps` function, this one also cancels subsequent event
@@ -365,7 +339,7 @@ function mergePropsAdvanced(...listOfProps: Props<any, any>[]) {
     for (let eventName in eventHandlers) {
       // Prevent default events for `onClick`, `onMouseDown`, `onKeyDown`, etc.
       if (/^(on(?:Click|Pointer|Mouse|Key)(?:Down|Up|Press)?)$/.test(eventName)) {
-        eventHandlers[eventName] = [(e: any) => e?.preventDefault?.()]
+        eventHandlers[eventName] = [(e: any) => { throw new Error("STUB"); }]
       }
     }
   }
@@ -374,19 +348,8 @@ function mergePropsAdvanced(...listOfProps: Props<any, any>[]) {
   for (let eventName in eventHandlers) {
     Object.assign(target, {
       [eventName](event: { nativeEvent?: Event; defaultPrevented: boolean }, ...args: any[]) {
-        let handlers = eventHandlers[eventName]
-
-        for (let handler of handlers) {
-          if (
-            (event instanceof Event || event?.nativeEvent instanceof Event) &&
-            event.defaultPrevented
-          ) {
-            return
-          }
-
-          handler(event, ...args)
-        }
-      },
+            throw new Error("STUB");
+        },
     })
   }
 
@@ -427,12 +390,8 @@ export function mergeProps<T extends Props<any, any>[]>(...listOfProps: T) {
   for (let eventName in eventHandlers) {
     Object.assign(target, {
       [eventName](...args: any[]) {
-        let handlers = eventHandlers[eventName]
-
-        for (let handler of handlers) {
-          handler?.(...args)
-        }
-      },
+            throw new Error("STUB");
+        },
     })
   }
 

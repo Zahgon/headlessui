@@ -6,9 +6,7 @@ export function microTask(cb: () => void) {
     Promise.resolve()
       .then(cb)
       .catch((e) =>
-        setTimeout(() => {
-          throw e
-        })
+        { throw new Error("STUB"); }
       )
   }
 }

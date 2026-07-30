@@ -6,17 +6,12 @@ export function useControllable<T>(
   defaultValue?: ComputedRef<T>
 ) {
   let internalValue = ref(defaultValue?.value)
-  let isControlled = computed(() => controlledValue.value !== undefined)
+  let isControlled = computed(() => { throw new Error("STUB"); })
 
   return [
-    computed(() => (isControlled.value ? controlledValue.value : internalValue.value)),
+    computed(() => { throw new Error("STUB"); }),
     function (value: unknown) {
-      if (isControlled.value) {
-        return onChange?.(value as T)
-      } else {
-        internalValue.value = value as UnwrapRef<T>
-        return onChange?.(value as T)
-      }
+        throw new Error("STUB");
     },
   ] as const
 }

@@ -30,34 +30,16 @@ function usePortalTarget(ownerDocument: Document | null): HTMLElement | null {
   let groupTarget = useContext(PortalGroupContext)
 
   let [target, setTarget] = useState(() => {
-    // Group context is used, but still null
-    if (!forceInRoot && groupTarget !== null) return groupTarget.current ?? null
-
-    // No group context is used, let's create a default portal root
-    if (env.isServer) return null
-    let existingRoot = ownerDocument?.getElementById('headlessui-portal-root')
-    if (existingRoot) return existingRoot
-
-    if (ownerDocument === null) return null
-
-    let root = ownerDocument.createElement('div')
-    root.setAttribute('id', 'headlessui-portal-root')
-    return ownerDocument.body.appendChild(root)
+      throw new Error("STUB");
   })
 
   // Ensure the portal root is always in the DOM
   useEffect(() => {
-    if (target === null) return
-
-    if (!ownerDocument?.body.contains(target)) {
-      ownerDocument?.body.appendChild(target)
-    }
+      throw new Error("STUB");
   }, [target, ownerDocument])
 
   useEffect(() => {
-    if (forceInRoot) return
-    if (groupTarget === null) return
-    setTarget(groupTarget.current)
+      throw new Error("STUB");
   }, [groupTarget, setTarget, forceInRoot])
 
   return target
@@ -82,79 +64,14 @@ export type PortalProps<TTag extends ElementType = typeof DEFAULT_PORTAL_TAG> = 
 let InternalPortalFn = forwardRefWithAs(function InternalPortalFn<
   TTag extends ElementType = typeof DEFAULT_PORTAL_TAG,
 >(props: PortalProps<TTag>, ref: Ref<HTMLElement>) {
-  let { ownerDocument: incomingOwnerDocument = null, ...theirProps } = props
-  let internalPortalRootRef = useRef<HTMLElement | null>(null)
-  let portalRef = useSyncRefs(
-    optionalRef<(typeof internalPortalRootRef)['current']>((ref) => {
-      internalPortalRootRef.current = ref
-    }),
-    ref
-  )
-  let defaultOwnerDocument = useOwnerDocument(internalPortalRootRef.current)
-  let ownerDocument = incomingOwnerDocument ?? defaultOwnerDocument
-  let target = usePortalTarget(ownerDocument)
-  let parent = useContext(PortalParentContext)
-  let d = useDisposables()
-  let ready = useServerHandoffComplete()
-  let render = useRender()
-
-  useOnUnmount(() => {
-    if (!target) return
-
-    // Cleanup the portal root when all portals are unmounted
-    if (target.childNodes.length <= 0) {
-      target.parentElement?.removeChild(target)
-    }
-  })
-
-  let ourProps = { ref: portalRef }
-
-  return !target || !ready
-    ? null
-    : createPortal(
-        <div
-          data-headlessui-portal=""
-          ref={(el) => {
-            d.dispose()
-
-            if (parent && el) {
-              d.add(parent.register(el))
-            }
-          }}
-        >
-          {render({
-            ourProps,
-            theirProps,
-            slot: {},
-            defaultTag: DEFAULT_PORTAL_TAG,
-            name: 'Portal',
-          })}
-        </div>,
-        target
-      )
+    throw new Error("STUB");
 })
 
 function PortalFn<TTag extends ElementType = typeof DEFAULT_PORTAL_TAG>(
   props: PortalProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let portalRef = useSyncRefs(ref)
-
-  let { enabled = true, ownerDocument, ...theirProps } = props
-
-  let render = useRender()
-
-  return enabled ? (
-    <InternalPortalFn {...theirProps} ownerDocument={ownerDocument} ref={portalRef} />
-  ) : (
-    render({
-      ourProps: { ref: portalRef },
-      theirProps,
-      slot: {},
-      defaultTag: DEFAULT_PORTAL_TAG,
-      name: 'Portal',
-    })
-  )
+    throw new Error("STUB");
 }
 
 // ---
@@ -178,23 +95,7 @@ function GroupFn<TTag extends ElementType = typeof DEFAULT_GROUP_TAG>(
   props: PortalGroupProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let { target, ...theirProps } = props
-  let groupRef = useSyncRefs(ref)
-
-  let ourProps = { ref: groupRef }
-
-  let render = useRender()
-
-  return (
-    <PortalGroupContext.Provider value={target}>
-      {render({
-        ourProps,
-        theirProps,
-        defaultTag: DEFAULT_GROUP_TAG,
-        name: 'Popover.Group',
-      })}
-    </PortalGroupContext.Provider>
-  )
+    throw new Error("STUB");
 }
 
 // ---
@@ -210,28 +111,22 @@ export function useNestedPortals() {
   let portals = useRef<HTMLElement[]>([])
 
   let register = useEvent((portal: HTMLElement) => {
-    portals.current.push(portal)
-    if (parent) parent.register(portal)
-    return () => unregister(portal)
+      throw new Error("STUB");
   })
 
   let unregister = useEvent((portal: HTMLElement) => {
-    let idx = portals.current.indexOf(portal)
-    if (idx !== -1) portals.current.splice(idx, 1)
-    if (parent) parent.unregister(portal)
+      throw new Error("STUB");
   })
 
   let api = useMemo<ContextType<typeof PortalParentContext>>(
-    () => ({ register, unregister, portals }),
+    () => { throw new Error("STUB"); },
     [register, unregister, portals]
   )
 
   return [
     portals,
     useMemo(() => {
-      return function PortalWrapper({ children }: { children: React.ReactNode }) {
-        return <PortalParentContext.Provider value={api}>{children}</PortalParentContext.Provider>
-      }
+        throw new Error("STUB");
     }, [api]),
   ] as const
 }

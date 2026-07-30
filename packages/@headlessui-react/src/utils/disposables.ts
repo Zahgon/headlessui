@@ -25,34 +25,31 @@ export function disposables() {
       options?: boolean | AddEventListenerOptions
     ) {
       element.addEventListener(name, listener as any, options)
-      return api.add(() => element.removeEventListener(name, listener as any, options))
+      return api.add(() => { throw new Error("STUB"); })
     },
 
     requestAnimationFrame(...args: Parameters<typeof requestAnimationFrame>) {
       let raf = requestAnimationFrame(...args)
-      return api.add(() => cancelAnimationFrame(raf))
+      return api.add(() => { throw new Error("STUB"); })
     },
 
     nextFrame(...args: Parameters<typeof requestAnimationFrame>) {
       return api.requestAnimationFrame(() => {
-        return api.requestAnimationFrame(...args)
+          throw new Error("STUB");
       })
     },
 
     setTimeout(...args: Parameters<typeof setTimeout>) {
-      let timer = setTimeout(...args)
-      return api.add(() => clearTimeout(timer))
+        throw new Error("STUB");
     },
 
     microTask(...args: Parameters<typeof microTask>) {
       let task = { current: true }
       microTask(() => {
-        if (task.current) {
-          args[0]()
-        }
+          throw new Error("STUB");
       })
       return api.add(() => {
-        task.current = false
+          throw new Error("STUB");
       })
     },
 
@@ -60,14 +57,14 @@ export function disposables() {
       let previous = node.style.getPropertyValue(property)
       Object.assign(node.style, { [property]: value })
       return this.add(() => {
-        Object.assign(node.style, { [property]: previous })
+          throw new Error("STUB");
       })
     },
 
     group(cb: (d: typeof this) => void) {
       let d = disposables()
       cb(d)
-      return this.add(() => d.dispose())
+      return this.add(() => { throw new Error("STUB"); })
     },
 
     add(cb: () => void) {
@@ -77,12 +74,7 @@ export function disposables() {
       }
 
       return () => {
-        let idx = _disposables.indexOf(cb)
-        if (idx >= 0) {
-          for (let dispose of _disposables.splice(idx, 1)) {
-            dispose()
-          }
-        }
+          throw new Error("STUB");
       }
     },
 

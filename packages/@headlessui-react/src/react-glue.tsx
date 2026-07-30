@@ -9,14 +9,14 @@ export function useSlice<M extends Machine<any, any>, Slice>(
   compare = shallowEqual
 ) {
   return useSyncExternalStoreWithSelector(
-    useEvent((onStoreChange) => machine.subscribe(identity, onStoreChange)),
-    useEvent(() => machine.state),
-    useEvent(() => machine.state),
+    useEvent((onStoreChange) => { throw new Error("STUB"); }),
+    useEvent(() => { throw new Error("STUB"); }),
+    useEvent(() => { throw new Error("STUB"); }),
     useEvent(selector),
     compare
   )
 }
 
 function identity<T>(value: T) {
-  return value
+    throw new Error("STUB");
 }

@@ -39,29 +39,7 @@ export let SwitchGroup = defineComponent({
     as: { type: [Object, String], default: 'template' },
   },
   setup(props, { slots, attrs }) {
-    let switchRef = ref<StateDefinition['switchRef']['value']>(null)
-    let labelledby = useLabels({
-      name: 'SwitchLabel',
-      props: {
-        htmlFor: computed(() => switchRef.value?.id),
-        onClick(event: MouseEvent & { currentTarget: HTMLElement }) {
-          if (!switchRef.value) return
-          if (event.currentTarget.tagName === 'LABEL') {
-            event.preventDefault()
-          }
-          switchRef.value.click()
-          switchRef.value.focus({ preventScroll: true })
-        },
-      },
-    })
-    let describedby = useDescriptions({ name: 'SwitchDescription' })
-
-    let api = { switchRef, labelledby, describedby }
-
-    provide(GroupContext, api)
-
-    return () =>
-      render({ theirProps: props, ourProps: {}, slot: {}, slots, attrs, name: 'SwitchGroup' })
+      throw new Error("STUB");
   },
 })
 
@@ -69,7 +47,7 @@ export let SwitchGroup = defineComponent({
 
 export let Switch = defineComponent({
   name: 'Switch',
-  emits: { 'update:modelValue': (_value: boolean) => true },
+  emits: { 'update:modelValue': (_value: boolean) => { throw new Error("STUB"); } },
   props: {
     as: { type: [Object, String], default: 'button' },
     modelValue: { type: Boolean, default: undefined },
@@ -77,118 +55,13 @@ export let Switch = defineComponent({
     form: { type: String, optional: true },
     name: { type: String, optional: true },
     value: { type: String, optional: true },
-    id: { type: String, default: () => `headlessui-switch-${useId()}` },
+    id: { type: String, default: () => { throw new Error("STUB"); } },
     disabled: { type: Boolean, default: false },
     tabIndex: { type: Number, default: 0 },
   },
   inheritAttrs: false,
   setup(props, { emit, attrs, slots, expose }) {
-    let api = inject(GroupContext, null)
-
-    let [checked, theirOnChange] = useControllable(
-      computed(() => props.modelValue),
-      (value: boolean) => emit('update:modelValue', value),
-      computed(() => props.defaultChecked)
-    )
-
-    function toggle() {
-      theirOnChange(!checked.value)
-    }
-
-    let internalSwitchRef = ref<HTMLButtonElement | null>(null)
-    let switchRef = api === null ? internalSwitchRef : api.switchRef
-    let type = useResolveButtonType(
-      computed(() => ({ as: props.as, type: attrs.type })),
-      switchRef
-    )
-
-    expose({ el: switchRef, $el: switchRef })
-
-    function handleClick(event: MouseEvent) {
-      event.preventDefault()
-      toggle()
-    }
-
-    function handleKeyUp(event: KeyboardEvent) {
-      if (event.key === Keys.Space) {
-        event.preventDefault()
-        toggle()
-      } else if (event.key === Keys.Enter) {
-        attemptSubmit(event.currentTarget as HTMLElement)
-      }
-    }
-
-    // This is needed so that we can "cancel" the click event when we use the `Enter` key on a button.
-    function handleKeyPress(event: KeyboardEvent) {
-      event.preventDefault()
-    }
-
-    let form = computed(() => dom(switchRef)?.closest?.('form'))
-    onMounted(() => {
-      watch(
-        [form],
-        () => {
-          if (!form.value) return
-          if (props.defaultChecked === undefined) return
-
-          function handle() {
-            theirOnChange(props.defaultChecked)
-          }
-
-          form.value.addEventListener('reset', handle)
-          return () => {
-            form.value?.removeEventListener('reset', handle)
-          }
-        },
-        { immediate: true }
-      )
-    })
-
-    return () => {
-      let { id, name, value, form, tabIndex, ...theirProps } = props
-      let slot = { checked: checked.value }
-      let ourProps = {
-        id,
-        ref: switchRef,
-        role: 'switch',
-        type: type.value,
-        tabIndex: tabIndex === -1 ? 0 : tabIndex,
-        'aria-checked': checked.value,
-        'aria-labelledby': api?.labelledby.value,
-        'aria-describedby': api?.describedby.value,
-        onClick: handleClick,
-        onKeyup: handleKeyUp,
-        onKeypress: handleKeyPress,
-      }
-
-      return h(Fragment, [
-        name != null && checked.value != null
-          ? h(
-              Hidden,
-              compact({
-                features: HiddenFeatures.Hidden,
-                as: 'input',
-                type: 'checkbox',
-                hidden: true,
-                readOnly: true,
-                checked: checked.value,
-                form,
-                disabled: theirProps.disabled,
-                name,
-                value,
-              })
-            )
-          : null,
-        render({
-          ourProps,
-          theirProps: { ...attrs, ...omit(theirProps, ['modelValue', 'defaultChecked']) },
-          slot,
-          attrs,
-          slots,
-          name: 'Switch',
-        }),
-      ])
-    }
+      throw new Error("STUB");
   },
 })
 

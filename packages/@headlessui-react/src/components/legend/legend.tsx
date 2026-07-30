@@ -21,10 +21,7 @@ function LegendFn<TTag extends ElementType = typeof DEFAULT_LEGEND_TAG>(
   props: LegendProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  // @ts-expect-error The props can still contain an `as` prop, but we are already passing an as
-  // prop as `div` (as a default). Now the ref is inferred as the ref for a `div`, but it can still
-  // be anything.
-  return <Label as="div" ref={ref} {...props} />
+    throw new Error("STUB");
 }
 
 export interface _internal_ComponentLegend extends HasDisplayName {

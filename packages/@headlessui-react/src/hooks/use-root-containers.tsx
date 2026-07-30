@@ -16,48 +16,13 @@ export function useRootContainers({
   mainTreeNode?: Element | null
 } = {}) {
   let resolveContainers = useEvent(() => {
-    let ownerDocument = getOwnerDocument(mainTreeNode)
-    let containers: Element[] = []
-
-    // Resolve default containers
-    for (let container of defaultContainers) {
-      if (container === null) continue
-      if (DOM.isElement(container)) {
-        containers.push(container)
-      } else if ('current' in container && DOM.isElement(container.current)) {
-        containers.push(container.current)
-      }
-    }
-
-    // Resolve portal containers
-    if (portals?.current) {
-      for (let portal of portals.current) {
-        containers.push(portal)
-      }
-    }
-
-    // Resolve third party (root) containers
-    for (let container of ownerDocument?.querySelectorAll('html > *, body > *') ?? []) {
-      if (container === document.body) continue // Skip `<body>`
-      if (container === document.head) continue // Skip `<head>`
-      if (!DOM.isElement(container)) continue // Skip non-HTMLElements
-      if (container.id === 'headlessui-portal-root') continue // Skip the Headless UI portal root
-      if (mainTreeNode) {
-        if (container.contains(mainTreeNode)) continue // Skip if it is the main app
-        if (container.contains((mainTreeNode?.getRootNode() as ShadowRoot)?.host)) continue // Skip if it is the main app (and the component is inside a shadow root)
-      }
-      if (containers.some((defaultContainer) => container.contains(defaultContainer))) continue // Skip if the current container is part of a container we've already seen (e.g.: default container / portal)
-
-      containers.push(container)
-    }
-
-    return containers
+      throw new Error("STUB");
   })
 
   return {
     resolveContainers,
     contains: useEvent((element: Element) =>
-      resolveContainers().some((container) => container.contains(element))
+      { throw new Error("STUB"); }
     ),
   }
 }
@@ -94,48 +59,7 @@ export function MainTreeProvider({
   children: React.ReactNode
   node?: Element | null
 }) {
-  let [mainTreeNode, setMainTreeNode] = useState<Element | null>(null)
-
-  // 1. Prefer the main tree node from context
-  // 2. Prefer the provided node
-  // 3. Create a new node at this point, and find the main tree node
-  let resolvedMainTreeNode = useMainTreeNode(node ?? mainTreeNode)
-
-  return (
-    <MainTreeContext.Provider value={resolvedMainTreeNode}>
-      {children}
-
-      {/**
-       * If no main tree node is found at this point, then we briefly render an
-       * element to find the main tree node and pass it along.
-       */}
-      {resolvedMainTreeNode === null && (
-        <Hidden
-          features={HiddenFeatures.Hidden}
-          ref={(el) => {
-            if (!el) return
-
-            // We will only render this when no `mainTreeNode` is found. This
-            // means that if we render this element and use it as the
-            // `mainTreeNode` that we will be unmounting it later.
-            //
-            // However, we can resolve the actual root container of the main
-            // tree node and use that instead.
-            for (let container of getOwnerDocument(el)?.querySelectorAll('html > *, body > *') ??
-              []) {
-              if (container === document.body) continue // Skip `<body>`
-              if (container === document.head) continue // Skip `<head>`
-              if (!DOM.isElement(container)) continue // Skip non-HTMLElements
-              if (container?.contains(el)) {
-                setMainTreeNode(container)
-                break
-              }
-            }
-          }}
-        />
-      )}
-    </MainTreeContext.Provider>
-  )
+    throw new Error("STUB");
 }
 
 /**

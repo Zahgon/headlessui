@@ -92,143 +92,7 @@ function FocusTrapFn<TTag extends ElementType = typeof DEFAULT_FOCUS_TRAP_TAG>(
   props: FocusTrapProps<TTag>,
   ref: Ref<HTMLElement>
 ) {
-  let container = useRef<HTMLElement | null>(null)
-  let focusTrapRef = useSyncRefs(container, ref)
-  let {
-    initialFocus,
-    initialFocusFallback,
-    containers,
-    features = FocusTrapFeatures.InitialFocus |
-      FocusTrapFeatures.TabLock |
-      FocusTrapFeatures.FocusLock |
-      FocusTrapFeatures.RestoreFocus,
-    ...theirProps
-  } = props
-
-  if (!useServerHandoffComplete()) {
-    features = FocusTrapFeatures.None
-  }
-
-  let ownerDocument = useOwnerDocument(container.current)
-
-  useRestoreFocus(features, { ownerDocument })
-  let previousActiveElement = useInitialFocus(features, {
-    ownerDocument,
-    container,
-    initialFocus,
-    initialFocusFallback,
-  })
-
-  useFocusLock(features, { ownerDocument, container, containers, previousActiveElement })
-
-  let direction = useTabDirection()
-  let handleFocus = useEvent((e: ReactFocusEvent) => {
-    if (!DOM.isHTMLElement(container.current)) return
-    let el = container.current
-
-    // TODO: Cleanup once we are using real browser tests
-    let wrapper = process.env.NODE_ENV === 'test' ? microTask : (cb: Function) => cb()
-    wrapper(() => {
-      match(direction.current, {
-        [TabDirection.Forwards]: () => {
-          focusIn(el, Focus.First, {
-            skipElements: [e.relatedTarget, initialFocusFallback] as HTMLElement[],
-          })
-        },
-        [TabDirection.Backwards]: () => {
-          focusIn(el, Focus.Last, {
-            skipElements: [e.relatedTarget, initialFocusFallback] as HTMLElement[],
-          })
-        },
-      })
-    })
-  })
-
-  let tabLockEnabled = useIsTopLayer(
-    Boolean(features & FocusTrapFeatures.TabLock),
-    'focus-trap#tab-lock'
-  )
-
-  let d = useDisposables()
-  let recentlyUsedTabKey = useRef(false)
-  let ourProps = {
-    ref: focusTrapRef,
-    onKeyDown(e: KeyboardEvent) {
-      if (e.key == 'Tab') {
-        recentlyUsedTabKey.current = true
-        d.requestAnimationFrame(() => {
-          recentlyUsedTabKey.current = false
-        })
-      }
-    },
-    onBlur(e: ReactFocusEvent) {
-      if (!(features & FocusTrapFeatures.FocusLock)) return
-
-      let allContainers = resolveContainers(containers)
-      if (DOM.isHTMLElement(container.current)) allContainers.add(container.current)
-
-      let relatedTarget = e.relatedTarget
-      if (!DOM.isHTMLorSVGElement(relatedTarget)) return
-
-      // Known guards, leave them alone!
-      if (relatedTarget.dataset.headlessuiFocusGuard === 'true') {
-        return
-      }
-
-      // Blur is triggered due to focus on relatedTarget, and the relatedTarget is not inside any
-      // of the dialog containers. In other words, let's move focus back in!
-      if (!contains(allContainers, relatedTarget)) {
-        // Was the blur invoked via the keyboard? Redirect to the next in line.
-        if (recentlyUsedTabKey.current) {
-          focusIn(
-            container.current as HTMLElement,
-            match(direction.current, {
-              [TabDirection.Forwards]: () => Focus.Next,
-              [TabDirection.Backwards]: () => Focus.Previous,
-            }) | Focus.WrapAround,
-            { relativeTo: e.target as HTMLElement }
-          )
-        }
-
-        // It was invoked via something else (e.g.: click, programmatically, ...). Redirect to the
-        // previous active item in the FocusTrap
-        else if (DOM.isHTMLorSVGElement(e.target)) {
-          focusElement(e.target)
-        }
-      }
-    },
-  }
-
-  let render = useRender()
-
-  return (
-    <>
-      {tabLockEnabled && (
-        <Hidden
-          as="button"
-          type="button"
-          data-headlessui-focus-guard
-          onFocus={handleFocus}
-          features={HiddenFeatures.Focusable}
-        />
-      )}
-      {render({
-        ourProps,
-        theirProps,
-        defaultTag: DEFAULT_FOCUS_TRAP_TAG,
-        name: 'FocusTrap',
-      })}
-      {tabLockEnabled && (
-        <Hidden
-          as="button"
-          type="button"
-          data-headlessui-focus-guard
-          onFocus={handleFocus}
-          features={HiddenFeatures.Focusable}
-        />
-      )}
-    </>
-  )
+    throw new Error("STUB");
 }
 
 // ---
@@ -253,27 +117,15 @@ function useRestoreElement(enabled: boolean = true) {
 
   useWatch(
     ([newEnabled], [oldEnabled]) => {
-      // We are disabling the restore element, so we need to clear it.
-      if (oldEnabled === true && newEnabled === false) {
-        // However, let's schedule it in a microTask, so that we can still read the value in the
-        // places where we are restoring the focus.
-        microTask(() => {
-          localHistory.current.splice(0)
-        })
-      }
-
-      // We are enabling the restore element, so we need to set it to the last "focused" element.
-      if (oldEnabled === false && newEnabled === true) {
-        localHistory.current = history.slice()
-      }
-    },
+          throw new Error("STUB");
+      },
     [enabled, history, localHistory]
   )
 
   // We want to return the last element that is still connected to the DOM, so we can restore the
   // focus to it.
   return useEvent(() => {
-    return localHistory.current.find((x) => x != null && x.isConnected) ?? null
+      throw new Error("STUB");
   })
 }
 
@@ -287,18 +139,12 @@ function useRestoreFocus(
 
   // Restore the focus to the previous element when `enabled` becomes false again
   useWatch(() => {
-    if (enabled) return
-
-    if (isActiveElement(ownerDocument?.body)) {
-      focusElement(getRestoreElement())
-    }
+      throw new Error("STUB");
   }, [enabled])
 
   // Restore the focus to the previous element when the component is unmounted
   useOnUnmount(() => {
-    if (!enabled) return
-
-    focusElement(getRestoreElement())
+      throw new Error("STUB");
   })
 }
 
@@ -326,84 +172,7 @@ function useInitialFocus(
 
   // Handle initial focus
   useWatch(() => {
-    // No focus management needed
-    if (features === FocusTrapFeatures.None) {
-      return
-    }
-
-    if (!enabled) {
-      // If we are disabling the initialFocus, then we should focus the fallback element if one is
-      // provided. This is needed to ensure _something_ is focused. Typically a wrapping element
-      // (e.g.: `Dialog` component).
-      //
-      // Note: we _don't_ want to move focus to the `initialFocus` ref, because the `InitialFocus`
-      // feature is disabled.
-      if (initialFocusFallback?.current) {
-        focusElement(initialFocusFallback.current)
-      }
-
-      return
-    }
-    let containerElement = container.current
-    if (!containerElement) return
-
-    // Delaying the focus to the next microtask ensures that a few conditions are true:
-    // - The container is rendered
-    // - Transitions could be started
-    // If we don't do this, then focusing an element will immediately cancel any transitions. This
-    // is not ideal because transitions will look broken.
-    // There is an additional issue with doing this immediately. The FocusTrap is used inside a
-    // Dialog, the Dialog is rendered inside of a Portal and the Portal is rendered at the end of
-    // the `document.body`. This means that the moment we call focus, the browser immediately
-    // tries to focus the element, which will still be at the bottom resulting in the page to
-    // scroll down. Delaying this will prevent the page to scroll down entirely.
-    microTask(() => {
-      if (!mounted.current) {
-        return
-      }
-
-      let activeElement = ownerDocument?.activeElement as HTMLElement
-
-      if (initialFocus?.current) {
-        if (initialFocus?.current === activeElement) {
-          previousActiveElement.current = activeElement
-          return // Initial focus ref is already the active element
-        }
-      } else if (containerElement!.contains(activeElement)) {
-        previousActiveElement.current = activeElement
-        return // Already focused within Dialog
-      }
-
-      // Try to focus the initialFocus ref
-      if (initialFocus?.current) {
-        focusElement(initialFocus.current)
-      } else {
-        if (features & FocusTrapFeatures.AutoFocus) {
-          // Try to focus the first focusable element with `Focus.AutoFocus` feature enabled
-          if (focusIn(containerElement!, Focus.First | Focus.AutoFocus) !== FocusResult.Error) {
-            return // Worked, bail
-          }
-        }
-
-        // Try to focus the first focusable element.
-        else if (focusIn(containerElement!, Focus.First) !== FocusResult.Error) {
-          return // Worked, bail
-        }
-
-        // Try the fallback
-        if (initialFocusFallback?.current) {
-          focusElement(initialFocusFallback.current)
-          if (ownerDocument?.activeElement === initialFocusFallback.current) {
-            return // Worked, bail
-          }
-        }
-
-        // Nothing worked
-        console.warn('There are no focusable elements inside the <FocusTrap />')
-      }
-
-      previousActiveElement.current = ownerDocument?.activeElement as HTMLElement
-    })
+      throw new Error("STUB");
   }, [initialFocusFallback, enabled, features])
 
   return previousActiveElement
@@ -431,29 +200,7 @@ function useFocusLock(
     ownerDocument?.defaultView,
     'focus',
     (event) => {
-      if (!enabled) return
-      if (!mounted.current) return
-
-      let allContainers = resolveContainers(containers)
-      if (DOM.isHTMLElement(container.current)) allContainers.add(container.current)
-
-      let previous = previousActiveElement.current
-      if (!previous) return
-
-      let toElement = event.target as HTMLElement | null
-
-      if (DOM.isHTMLElement(toElement)) {
-        if (!contains(allContainers, toElement)) {
-          event.preventDefault()
-          event.stopPropagation()
-          focusElement(previous)
-        } else {
-          previousActiveElement.current = toElement
-          focusElement(toElement)
-        }
-      } else {
-        focusElement(previousActiveElement.current)
-      }
+        throw new Error("STUB");
     },
     true
   )

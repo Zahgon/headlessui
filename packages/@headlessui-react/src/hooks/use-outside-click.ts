@@ -33,73 +33,8 @@ export function useOutsideClick(
       event: E,
       resolveTarget: (event: E) => (HTMLOrSVGElement & Element) | null
     ) {
-      // Check whether the event got prevented already. This can happen if you
-      // use the useOutsideClick hook in both a Dialog and a Menu and the inner
-      // Menu "cancels" the default behavior so that only the Menu closes and
-      // not the Dialog (yet)
-      if (event.defaultPrevented) return
-
-      // Resolve the new target
-      let target = resolveTarget(event)
-      if (target === null) return
-
-      // Ignore if the target doesn't exist in the DOM anymore
-      if (!target.getRootNode().contains(target)) return
-
-      // Ignore if the target was removed from the DOM by the time the handler
-      // was called
-      if (!target.isConnected) return
-
-      let _containers = (function resolve(containers): ContainerCollection {
-        if (typeof containers === 'function') {
-          return resolve(containers())
-        }
-
-        if (Array.isArray(containers)) {
-          return containers
-        }
-
-        if (containers instanceof Set) {
-          return containers
-        }
-
-        return [containers]
-      })(containers)
-
-      // Ignore if the target exists in one of the containers
-      for (let container of _containers) {
-        if (container === null) continue
-        if (container.contains(target)) {
-          return
-        }
-
-        // If the click crossed a shadow boundary, we need to check if the
-        // container is inside the tree by using `composedPath` to "pierce" the
-        // shadow boundary
-        if (event.composed && event.composedPath().includes(container as EventTarget)) {
-          return
-        }
-      }
-
-      // This allows us to check whether the event was defaultPrevented when you
-      // are nesting this inside a `<Dialog />` for example.
-      if (
-        // This check allows us to know whether or not we clicked on a
-        // "focusable" element like a button or an input. This is a backwards
-        // compatibility check so that you can open a <Menu /> and click on
-        // another <Menu /> which should close Menu A and open Menu B. We might
-        // revisit that so that you will require 2 clicks instead.
-        !isFocusableElement(target, FocusableMode.Loose) &&
-        // This could be improved, but the `Combobox.Button` adds tabIndex={-1}
-        // to make it unfocusable via the keyboard so that tabbing to the next
-        // item from the input doesn't first go to the button.
-        target.tabIndex !== -1
-      ) {
-        event.preventDefault()
-      }
-
-      return cbRef.current(event, target)
-    },
+          throw new Error("STUB");
+      },
     [cbRef, containers]
   )
 
@@ -109,9 +44,7 @@ export function useOutsideClick(
     enabled,
     'pointerdown',
     (event) => {
-      if (isMobile()) return
-
-      initialClickTarget.current = (event.composedPath?.()?.[0] || event.target) as HTMLElement
+        throw new Error("STUB");
     },
     true
   )
@@ -120,13 +53,7 @@ export function useOutsideClick(
     enabled,
     'pointerup',
     (event) => {
-      if (isMobile()) return
-      if (!initialClickTarget.current) return
-
-      let target = initialClickTarget.current
-      initialClickTarget.current = null
-
-      return handleOutsideClick(event, () => target)
+        throw new Error("STUB");
     },
 
     // We will use the `capture` phase so that layers in between with `event.stopPropagation()`
@@ -141,8 +68,7 @@ export function useOutsideClick(
     enabled,
     'touchstart',
     (event) => {
-      startPosition.current.x = event.touches[0].clientX
-      startPosition.current.y = event.touches[0].clientY
+        throw new Error("STUB");
     },
     true
   )
@@ -151,22 +77,7 @@ export function useOutsideClick(
     enabled,
     'touchend',
     (event) => {
-      // If the user moves their finger by ${MOVE_THRESHOLD_PX} pixels or more,
-      // we'll assume that they are scrolling and not clicking.
-      let endPosition = { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY }
-      if (
-        Math.abs(endPosition.x - startPosition.current.x) >= MOVE_THRESHOLD_PX ||
-        Math.abs(endPosition.y - startPosition.current.y) >= MOVE_THRESHOLD_PX
-      ) {
-        return
-      }
-
-      return handleOutsideClick(event, () => {
-        if (DOM.isHTMLorSVGElement(event.target)) {
-          return event.target
-        }
-        return null
-      })
+        throw new Error("STUB");
     },
 
     // We will use the `capture` phase so that layers in between with `event.stopPropagation()`
@@ -187,11 +98,7 @@ export function useOutsideClick(
     enabled,
     'blur',
     (event) => {
-      return handleOutsideClick(event, () => {
-        return DOM.isHTMLIframeElement(window.document.activeElement)
-          ? window.document.activeElement
-          : null
-      })
+        throw new Error("STUB");
     },
     true
   )
